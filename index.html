@@ -435,11 +435,11 @@ function renderDoseringen(){
   h+=`<h2 class="section">${L({nl:"Zones",es:"Zonas"})}</h2>`;
   h+=`<table><tr><th>${L({nl:"Zone",es:"Zona"})}</th><th>${L({nl:"Oppervlak",es:"Superficie"})}</th><th>${L({nl:"Rugzakken gras",es:"Mochilas césped"})}</th></tr>`;
   const zones=[
-    {z:"Zona privado",o:{nl:"700 m² gras + planten",es:"700 m² césped + plantas"},r:"2"},
-    {z:"Zona piscina",o:{nl:"350 m² gras + planten",es:"350 m² césped + plantas"},r:{nl:"1 (samen)",es:"1 (juntos)"}},
-    {z:"Plaza pueblo",o:{nl:"± 150 m² planten",es:"± 150 m² plantas"},r:"—"}
+    {z:{nl:"Gras boven (bij huis)",es:"Césped arriba (casa)"},o:{nl:"± 600 m² gras",es:"± 600 m² césped"},r:"2 (2×16 L)"},
+    {z:{nl:"Gras bij zwembad",es:"Césped piscina"},o:{nl:"± 350 m² gras + planten",es:"± 350 m² césped + plantas"},r:{nl:"1 (1×16 L, samen)",es:"1 (1×16 L, juntos)"}},
+    {z:{nl:"Plaza pueblo (planten)",es:"Plaza pueblo (plantas)"},o:{nl:"± 150 m² planten",es:"± 150 m² plantas"},r:"—"}
   ];
-  zones.forEach(z=>h+=`<tr><td><b>${z.z}</b></td><td>${L(z.o)}</td><td>${typeof z.r==="string"?z.r:L(z.r)}</td></tr>`);
+  zones.forEach(z=>h+=`<tr><td><b>${L(z.z)}</b></td><td>${L(z.o)}</td><td>${typeof z.r==="string"?z.r:L(z.r)}</td></tr>`);
   h+=`</table>`;
   h+=`<h2 class="section">Cystium N — ${L({nl:"ml per rugzak (16 L)",es:"ml por mochila (16 L)"})}</h2>`;
   h+=`<table><tr><th>${L({nl:"Toepassing",es:"Aplicación"})}</th><th>${L({nl:"Normaal",es:"Normal"})}</th><th>${L({nl:"Superstress",es:"Súper estrés"})}</th></tr>`;
@@ -452,6 +452,7 @@ function renderDoseringen(){
   dos.forEach(d=>h+=`<tr><td>${L(d.t)}</td><td>${typeof d.n==="string"?d.n:L(d.n)}</td><td>${typeof d.s==="string"?d.s:L(d.s)}</td></tr>`);
   h+=`</table>`;
   h+=`<p class="note">${L({nl:"Goed schudden vóór gebruik. Ruim water vóór en ná. Alleen bij extreme hitte, droogte, na snoei of stress.",es:"Agitar bien antes. Riego abundante antes y después. Solo con calor extremo, sequía, tras poda o estrés."})}</p>`;
+  h+=`<p class="note">${L({nl:"Toegepast: juni 2026 — 100 ml / 16 L op het gras (normaal, bereik 100–150).",es:"Aplicado: junio 2026 — 100 ml / 16 L en el césped (normal, rango 100–150)."})}</p>`;
   h+=`<div class="card alert"><div class="ttl"><span class="tag alert">${L({nl:"Aanvullen",es:"Completar"})}</span>${L({nl:"Nog toe te voegen",es:"Por añadir"})}</div><div class="body">${L({nl:"Dosering per rugzak voor Ficosturf, Ficosagro, Cystium-K, Purín de Ortiga en de bemesting — zodra Tuli de ml per rugzak doorgeeft, zet ik ze hier in dezelfde tabel.",es:"Dosis por mochila de Ficosturf, Ficosagro, Cystium-K, Purín de Ortiga y el abono — en cuanto Tuli pase los ml por mochila, los añado aquí en la misma tabla."})}</div></div>`;
   document.getElementById("v-doseringen").innerHTML=h}
 function renderAll(){buildNav();renderNu();renderMaand();renderSeizoen();renderSnoei();renderProblemen();renderProducten();renderDoseringen();
