@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abrazzo Tuinkalender</title>
+<style>
+  :root{
+    --olive:#4a5938; --olive-d:#3a4a2c; --terra:#b3623f; --terra-d:#8f4d31;
+    --sand:#f3ede1; --sand-d:#e6dcc8; --ink:#2c2a24; --muted:#6f6a5d;
+    --leaf:#6b8f4e; --gold:#c89a3c; --line:#d9d0bd; --card:#fbf8f1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--sand);color:var(--ink);line-height:1.5;padding-bottom:60px}
+  header{background:var(--olive);color:var(--sand);padding:18px 16px 14px}
+  header .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+  header h1{font-size:1.35rem;font-weight:600;letter-spacing:.3px}
+  header .sub{font-size:.82rem;opacity:.85;margin-top:2px}
+  .lang{display:flex;gap:4px}
+  .lang button{background:rgba(255,255,255,.12);color:var(--sand);border:1px solid rgba(255,255,255,.25);
+    padding:5px 11px;border-radius:20px;font-size:.8rem;cursor:pointer;font-weight:600}
+  .lang button.active{background:var(--terra);border-color:var(--terra)}
+  nav{display:flex;gap:6px;overflow-x:auto;padding:12px 12px 4px;background:var(--olive-d);
+    -webkit-overflow-scrolling:touch;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  nav button{white-space:nowrap;background:transparent;color:var(--sand);border:1px solid rgba(255,255,255,.22);
+    padding:8px 14px;border-radius:20px;font-size:.85rem;cursor:pointer;font-weight:600;flex:0 0 auto}
+  nav button.active{background:var(--sand);color:var(--olive-d);border-color:var(--sand)}
+  main{max-width:760px;margin:0 auto;padding:16px 14px}
+  .view{display:none;animation:fade .25s ease}
+  .view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .now-banner{background:var(--terra);color:#fff;border-radius:14px;padding:14px 16px;margin-bottom:16px}
+  .now-banner .label{font-size:.72rem;text-transform:uppercase;letter-spacing:1.5px;opacity:.9}
+  .now-banner .big{font-size:1.5rem;font-weight:700;margin-top:1px}
+  .now-banner .small{font-size:.85rem;opacity:.95;margin-top:3px}
+  h2.section{font-size:1.05rem;color:var(--olive-d);margin:22px 0 10px;font-weight:700;
+    border-bottom:2px solid var(--line);padding-bottom:6px}
+  h2.section:first-child{margin-top:0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin-bottom:11px;
+    box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  .card.grass{border-left:5px solid var(--leaf)}
+  .card.plant{border-left:5px solid var(--olive)}
+  .card.mest{border-left:5px solid var(--gold)}
+  .card.snoei{border-left:5px solid var(--terra)}
+  .card.alert{border-left:5px solid #c0392b;background:#fdf2ef}
+  .card.rust{border-left:5px solid #9aa0a6;background:#f5f4f0}
+  .card .ttl{font-weight:700;font-size:.97rem;display:flex;align-items:center;gap:7px}
+  .card .tag{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+    padding:2px 8px;border-radius:10px;color:#fff;flex:0 0 auto}
+  .tag.grass{background:var(--leaf)} .tag.plant{background:var(--olive)}
+  .tag.mest{background:var(--gold)} .tag.snoei{background:var(--terra)}
+  .tag.alert{background:#c0392b} .tag.rust{background:#9aa0a6}
+  .card .body{font-size:.88rem;margin-top:6px;color:var(--ink)}
+  .card .meta{font-size:.78rem;color:var(--muted);margin-top:6px;display:flex;flex-wrap:wrap;gap:4px 14px}
+  .card .meta span b{color:var(--olive-d)}
+  .when{display:inline-block;font-size:.72rem;font-weight:700;background:var(--sand-d);color:var(--olive-d);
+    padding:2px 9px;border-radius:10px;margin-top:7px}
+  .month-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px}
+  .month-grid button{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 4px;
+    font-size:.85rem;font-weight:600;color:var(--ink);cursor:pointer;text-align:center}
+  .month-grid button.cur{background:var(--olive);color:var(--sand);border-color:var(--olive)}
+  .month-grid button.sel{outline:2px solid var(--terra);outline-offset:-2px}
+  .season-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+  .season-row button{flex:1;min-width:70px;background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:9px 4px;font-size:.82rem;font-weight:600;cursor:pointer;color:var(--ink)}
+  .season-row button.sel{background:var(--terra);color:#fff;border-color:var(--terra)}
+  table{width:100%;border-collapse:collapse;font-size:.84rem;background:var(--card);border-radius:10px;overflow:hidden}
+  th{background:var(--olive);color:var(--sand);text-align:left;padding:9px 10px;font-size:.78rem;font-weight:600}
+  td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:top}
+  tr:nth-child(even) td{background:rgba(0,0,0,.015)}
+  .pill{display:inline-block;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:10px;
+    background:var(--sand-d);color:var(--olive-d);white-space:nowrap}
+  details{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:9px;overflow:hidden}
+  details summary{padding:12px 14px;font-weight:700;cursor:pointer;font-size:.92rem;list-style:none;
+    display:flex;justify-content:space-between;align-items:center;gap:8px}
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"+";font-size:1.3rem;color:var(--terra);font-weight:400}
+  details[open] summary::after{content:"–"}
+  details .dbody{padding:0 14px 14px;font-size:.86rem}
+  details .dbody .row{margin-top:8px}
+  details .dbody .row b{color:var(--olive-d);display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.4px}
+  .legend{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 14px;font-size:.74rem}
+  .legend span{display:inline-flex;align-items:center;gap:5px;color:var(--muted)}
+  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  .note{font-size:.82rem;color:var(--muted);font-style:italic;margin:8px 2px 0}
+  .empty{text-align:center;color:var(--muted);padding:30px 10px;font-style:italic}
+  footer{text-align:center;font-size:.74rem;color:var(--muted);padding:20px 14px}
+  @media(max-width:420px){header h1{font-size:1.15rem}.now-banner .big{font-size:1.25rem}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div>
+      <h1>Abrazzo Tuinkalender</h1>
+      <div class="sub" data-i="subtitle">Wat te doen — per week, maand en seizoen</div>
+    </div>
+    <div class="lang">
+      <button id="nl" class="active" onclick="setLang('nl')">NL</button>
+      <button id="es" onclick="setLang('es')">ES</button>
+    </div>
+  </div>
+</header>
+<nav id="nav"></nav>
+<main>
+  <div id="v-nu" class="view active"></div>
+  <div id="v-maand" class="view"></div>
+  <div id="v-seizoen" class="view"></div>
+  <div id="v-snoei" class="view"></div>
+  <div id="v-problemen" class="view"></div>
+  <div id="v-producten" class="view"></div>
+</main>
+<footer>
+  <span data-i="footer">Gebaseerd op het verzorgingsschema van Tuli · Abrazzo, Sant Andreu de Llavaneres</span>
+</footer>
+
+<script>
+/* ============ DATA ============ */
+const T = {
+  nav:{nu:{nl:"Nu",es:"Ahora"},maand:{nl:"Per maand",es:"Por mes"},seizoen:{nl:"Per seizoen",es:"Por temporada"},
+    snoei:{nl:"Snoei",es:"Poda"},problemen:{nl:"Plantproblemen",es:"Problemas"},producten:{nl:"Producten",es:"Productos"}},
+  subtitle:{nl:"Wat te doen — per week, maand en seizoen",es:"Qué hacer — por semana, mes y temporada"},
+  footer:{nl:"Gebaseerd op het verzorgingsschema van Tuli · Abrazzo, Sant Andreu de Llavaneres",
+    es:"Basado en el esquema de cuidado de Tuli · Abrazzo, Sant Andreu de Llavaneres"},
+  thisMonth:{nl:"Deze maand",es:"Este mes"}, thisWeek:{nl:"Deze week",es:"Esta semana"},
+  season:{nl:"Seizoen",es:"Temporada"}, nothing:{nl:"Geen vaste taken deze maand — rustperiode.",es:"Sin tareas fijas este mes — periodo de descanso."},
+  weekHint:{nl:"Vroege ochtend of late avond bij hitte.",es:"Por la mañana temprano o por la tarde con calor."},
+  pickMonth:{nl:"Kies een maand",es:"Elige un mes"}, pickSeason:{nl:"Kies een seizoen",es:"Elige una temporada"},
+  legend:{nl:["Gras","Planten","Bemesting","Snoei","Let op","Rust"],es:["Césped","Plantas","Abono","Poda","Atención","Descanso"]}
+};
+const MONTHS={nl:["Januari","Februari","Maart","April","Mei","Juni","Juli","Augustus","September","Oktober","November","December"],
+  es:["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]};
+const SEASONS={
+  winter:{m:[11,0,1],nl:"Winter",es:"Invierno"},
+  lente:{m:[2,3,4],nl:"Lente",es:"Primavera"},
+  zomer:{m:[5,6,7],nl:"Zomer",es:"Verano"},
+  herfst:{m:[8,9,10],nl:"Herfst",es:"Otoño"}};
+
+/* reusable task blocks */
+const grasCombo={cat:"grass",
+  ttl:{nl:"Gras: Ficosturf + Ficosagro",es:"Césped: Ficosturf + Ficosagro"},
+  body:{nl:"Samen in 1 rugzak. Versterkt het gazon, maakt het groener en activeert het bodemleven.",
+        es:"Juntos en una mochila. Fortalece el césped, lo hace más verde y activa el suelo."},
+  when:{nl:"Week 1 van de maand",es:"Semana 1 del mes"},
+  meta:{nl:"Op de bodem · licht water vooraf, 1–2 u erna",es:"Sobre el suelo · riego ligero antes, 1–2 h después"}};
+const plantCombo={cat:"plant",
+  ttl:{nl:"Planten: Cystium-K + Ficosagro",es:"Plantas: Cystium-K + Ficosagro"},
+  body:{nl:"Samen in 1 rugzak. Voor buitenplanten incl. citrus en struiken — ondersteunt bloei en groei.",
+        es:"Juntos en una mochila. Plantas exteriores incl. cítricos y arbustos — estimula flor y crecimiento."},
+  when:{nl:"Week 1 van de maand",es:"Semana 1 del mes"},
+  meta:{nl:"Op het blad · licht water vooraf, 1 u erna",es:"Sobre la hoja · riego ligero antes, 1 h después"}};
+const purin={cat:"plant",
+  ttl:{nl:"Purín de Ortiga — schimmel + insect",es:"Purín de Ortiga — hongo + insecto"},
+  body:{nl:"Gras én planten. Preventief tegen schimmel- en insectendruk. Versterkt de natuurlijke weerstand.",
+        es:"Césped y plantas. Preventivo contra hongos e insectos. Refuerza la resistencia natural."},
+  when:{nl:"Week 3 — 2 weken ná Ficos/Cystium",es:"Semana 3 — 2 semanas tras Ficos/Cystium"},
+  meta:{nl:"Blad beide zijden · niet combineren met Azufre",es:"Hoja por ambos lados · no combinar con Azufre"}};
+const mest=(n)=>({cat:"mest",
+  ttl:{nl:"Organische bemesting ("+n+"/3)",es:"Abono orgánico ("+n+"/3)"},
+  body:{nl:"Gras: Batlle césped (8-4-6). Planten/bomen: Batlle universal (6-4-6). Korrels licht door de aarde.",
+        es:"Césped: Batlle césped (8-4-6). Plantas/árboles: Batlle universal (6-4-6). Bolitas ligeras en la tierra."},
+  when:{nl:"1× deze maand — buiten de hitte",es:"1× este mes — fuera del calor"},
+  meta:{nl:"Ideale temp 15–25°C · daarna water geven",es:"Temp ideal 15–25°C · regar después"}});
+
+const CAL={
+  0:{season:"winter",tasks:[
+    {cat:"rust",ttl:{nl:"Rustperiode",es:"Periodo de descanso"},
+     body:{nl:"Geen vaste behandelingen. Plan de snoei en controleer je materiaal en voorraad.",
+           es:"Sin tratamientos fijos. Planifica la poda y revisa material y existencias."}}]},
+  1:{season:"winter",tasks:[
+    {cat:"snoei",ttl:{nl:"Snoei olijfboom",es:"Poda del olivo"},
+     body:{nl:"Eind winter, ná de kans op vorst. Dode/zieke/kruisende takken + waterloten weg, kroon open houden.",
+           es:"Fin de invierno, tras el frío. Quita ramas muertas/enfermas/cruzadas + chupones, copa abierta."},
+     when:{nl:"Feb–maart",es:"Feb–marzo"},meta:{nl:"Max 25–30% van de kroon",es:"Máx 25–30% de la copa"}},
+    {cat:"snoei",ttl:{nl:"Snoei sinaasappel & citroen",es:"Poda naranjo & limón"},
+     body:{nl:"Lichte vormsnoei. Kruisende, zieke, dode takken + waterloten weg. Goede luchtcirculatie tegen schimmel.",
+           es:"Poda ligera de forma. Ramas cruzadas/enfermas/muertas + chupones. Buena circulación de aire."},
+     when:{nl:"Begin februari",es:"Principios de febrero"}},
+    {cat:"alert",ttl:{nl:"Seizoen-start losse middelen",es:"Inicio de productos puntuales"},
+     body:{nl:"Vanaf nu inzetbaar wanneer nódig: Ferrare (ijzer, t/m begin juni), Azufre (schimmel, t/m okt), Schneckenkorn (slakken, t/m nov). Alleen bij een concreet probleem.",
+           es:"Desde ahora si hace falta: Ferrare (hierro, hasta inicio junio), Azufre (hongo, hasta oct), Schneckenkorn (caracoles, hasta nov). Solo ante un problema real."}}]},
+  2:{season:"lente",tasks:[
+    {cat:"alert",ttl:{nl:"Start groeiseizoen",es:"Inicio de la temporada"},
+     body:{nl:"De maandcyclus begint. Vanaf nu t/m eind oktober elke maand de vaste behandelingen.",
+           es:"Empieza el ciclo mensual. Desde ahora hasta fin de octubre, cada mes los tratamientos fijos."}},
+    grasCombo, plantCombo, purin, mest(1),
+    {cat:"snoei",ttl:{nl:"Olijf afronden + citrus",es:"Terminar olivo + cítricos"},
+     body:{nl:"Laatste snoei olijfboom en citrus vóór de groei goed op gang komt.",
+           es:"Última poda de olivo y cítricos antes de que arranque el crecimiento."}}]},
+  3:{season:"lente",tasks:[grasCombo,plantCombo,purin,
+    {cat:"snoei",ttl:{nl:"Snoei rozemarijn",es:"Poda romero"},
+     body:{nl:"Na de bloei. Alleen jonge scheuten / 1/3 van de nieuwe groei. Nooit in oud hout — dat loopt slecht uit.",
+           es:"Tras florecer. Solo brotes jóvenes / 1/3 del crecimiento nuevo. Nunca en madera vieja."},
+     when:{nl:"Voorjaar",es:"Primavera"}}]},
+  4:{season:"lente",tasks:[grasCombo,plantCombo,purin]},
+  5:{season:"zomer",tasks:[grasCombo,plantCombo,purin,mest(2),
+    {cat:"alert",ttl:{nl:"Ferrare loopt af",es:"Termina Ferrare"},
+     body:{nl:"IJzer (Ferrare) alleen nog t/m begin juni. Daarna te warm — wacht tot september.",
+           es:"Hierro (Ferrare) solo hasta inicio de junio. Después hace demasiado calor — espera a septiembre."}}]},
+  6:{season:"zomer",tasks:[
+    {cat:"alert",ttl:{nl:"Hitte — werk vroeg of laat",es:"Calor — trabaja temprano o tarde"},
+     body:{nl:"Alle behandelingen in de vroege ochtend of late avond. GEEN organische bemesting (te heet).",
+           es:"Todos los tratamientos por la mañana temprano o por la tarde. SIN abono orgánico (calor)."}},
+    grasCombo,plantCombo,purin,
+    {cat:"plant",ttl:{nl:"Cystium N — alleen bij stress",es:"Cystium N — solo con estrés"},
+     body:{nl:"Bij extreme hitte, droogte of na snoei: anti-stress en herstel. Goed schudden. Ruim water vooraf en erna.",
+           es:"Con calor extremo, sequía o tras poda: anti-estrés y recuperación. Agitar bien. Riego antes y después."},
+     when:{nl:"Indien nodig",es:"Si es necesario"}}]},
+  7:{season:"zomer",tasks:[
+    {cat:"alert",ttl:{nl:"Hitte — werk vroeg of laat",es:"Calor — trabaja temprano o tarde"},
+     body:{nl:"Behandelingen vroege ochtend / late avond. Geen bemesting. Cystium N bij hittestress.",
+           es:"Tratamientos temprano / tarde. Sin abono. Cystium N con estrés por calor."}},
+    grasCombo,plantCombo,purin,
+    {cat:"snoei",ttl:{nl:"Oleander — na de bloei",es:"Adelfa — tras florecer"},
+     body:{nl:"Eind zomer, direct na de bloei. Jaarlijks ~1/3 van de oudste takken laag bij de basis weg.",
+           es:"Fin de verano, tras florecer. Cada año ~1/3 de las ramas más viejas desde la base."},
+     when:{nl:"Eind zomer",es:"Fin de verano"}}]},
+  8:{season:"herfst",tasks:[grasCombo,plantCombo,purin,mest(3),
+    {cat:"alert",ttl:{nl:"Ferrare-seizoen weer open",es:"Vuelve la temporada de Ferrare"},
+     body:{nl:"IJzer (Ferrare) weer inzetbaar t/m november, bij ijzertekort en temp 15–25°C.",
+           es:"Hierro (Ferrare) otra vez hasta noviembre, con falta de hierro y temp 15–25°C."}},
+    {cat:"snoei",ttl:{nl:"Oleander",es:"Adelfa"},
+     body:{nl:"Snoei na de bloei voortzetten indien nog niet gedaan.",es:"Continúa la poda tras florecer si no se hizo."}}]},
+  9:{season:"herfst",tasks:[
+    {cat:"alert",ttl:{nl:"Laatste maand maandcyclus",es:"Último mes del ciclo mensual"},
+     body:{nl:"Ficos/Cystium/Purín lopen t/m eind oktober. Daarna stopt de vaste cyclus tot maart.",
+           es:"Ficos/Cystium/Purín hasta fin de octubre. Después para el ciclo fijo hasta marzo."}},
+    grasCombo,plantCombo,purin]},
+  10:{season:"herfst",tasks:[
+    {cat:"rust",ttl:{nl:"Cyclus stopt",es:"El ciclo para"},
+     body:{nl:"Vaste behandelingen gestopt. Nog inzetbaar t/m nov bij probleem: Ferrare (ijzer), Schneckenkorn (slakken).",
+           es:"Tratamientos fijos parados. Hasta nov si hay problema: Ferrare (hierro), Schneckenkorn (caracoles)."}}]},
+  11:{season:"winter",tasks:[
+    {cat:"rust",ttl:{nl:"Rustperiode",es:"Periodo de descanso"},
+     body:{nl:"Tuin in winterrust. Geen behandelingen. Tijd voor planning en gereedschapsonderhoud.",
+           es:"Jardín en descanso. Sin tratamientos. Tiempo de planificar y mantener herramientas."}}]}
+};
+
+const SNOEI=[
+  {plant:{nl:"Olijfboom",es:"Olivo"},tijd:{nl:"Eind winter (feb–maart), na vorst",es:"Fin de invierno (feb–mar), tras el frío"},
+   hoe:{nl:"Dode, zieke, kruisende takken + waterloten weg. Kroon open houden voor licht en lucht.",es:"Quita ramas muertas, enfermas, cruzadas + chupones. Copa abierta para luz y aire."},
+   op:{nl:"Nooit meer dan 25–30% van de kroon in één keer.",es:"Jamás más del 25–30% de la copa de una vez."}},
+  {plant:{nl:"Sinaasappel & citroen",es:"Naranjo & limón"},tijd:{nl:"Eind winter / begin voorjaar",es:"Fin de invierno / inicio primavera"},
+   hoe:{nl:"Lichte vormsnoei. Kruisende, zieke, dode takken + waterloten weg.",es:"Poda ligera de forma. Ramas cruzadas, enfermas, muertas + chupones."},
+   op:{nl:"Goede luchtcirculatie voorkomt schimmelziekten.",es:"Buena circulación de aire evita hongos."}},
+  {plant:{nl:"Kumquat",es:"Kumquat"},tijd:{nl:"Na de oogst of eind winter",es:"Tras la cosecha o fin de invierno"},
+   hoe:{nl:"Alleen licht: vorm behouden, dode takjes weg.",es:"Solo ligero: mantener forma, quitar ramitas muertas."},
+   op:{nl:"Groeit langzaam — zware snoei vermijden.",es:"Crece lento — evitar poda fuerte."}},
+  {plant:{nl:"Oleander",es:"Adelfa"},tijd:{nl:"Direct na de bloei (eind zomer/begin herfst)",es:"Tras florecer (fin verano/inicio otoño)"},
+   hoe:{nl:"Jaarlijks ~1/3 van de oudste takken laag bij de basis weg. Rest licht inkorten.",es:"Cada año ~1/3 de ramas viejas desde la base. Resto ligero."},
+   op:{nl:"Sterk verouderd? Verjonging spreiden over 2–3 jaar.",es:"Muy viejo? Reparte la renovación en 2–3 años."}},
+  {plant:{nl:"Kruipende rozemarijn",es:"Romero rastrero"},tijd:{nl:"Na de bloei (voorjaar)",es:"Tras florecer (primavera)"},
+   hoe:{nl:"Alleen jonge scheuten terugknippen. Niet in oud hout.",es:"Solo brotes jóvenes. No en madera vieja."},
+   op:{nl:"Houdt de plant compact en vol.",es:"Mantiene la planta compacta y llena."}},
+  {plant:{nl:"Rozemarijn",es:"Romero"},tijd:{nl:"Voorjaar of na de bloei",es:"Primavera o tras florecer"},
+   hoe:{nl:"~1/3 van alleen de nieuwe groei terugknippen.",es:"~1/3 solo del crecimiento nuevo."},
+   op:{nl:"Niet in oud hout — dat loopt slecht weer uit.",es:"No en madera vieja — rebrota mal."}},
+  {plant:{nl:"Toscaanse jasmijn",es:"Jazmín toscano"},tijd:{nl:"Direct na de bloei (zomer) of licht in voorjaar",es:"Tras florecer (verano) o ligero en primavera"},
+   hoe:{nl:"Dode, beschadigde, kruisende takken weg. Lange ranken terug voor vertakking.",es:"Ramas muertas, dañadas, cruzadas. Cortar ramas largas para ramificar."},
+   op:{nl:"Niet te zwaar. Bloeit op nieuwe scheuten ná de bloei.",es:"No fuerte. Florece en brotes nuevos tras florecer."}},
+  {plant:{nl:"Japanse wolmispel (Níspero)",es:"Níspero"},tijd:{nl:"Na de oogst (late lente/begin zomer)",es:"Tras la cosecha (fin primavera/inicio verano)"},
+   hoe:{nl:"Dode, beschadigde, naar binnen groeiende takken weg. Kroon uitdunnen, natuurlijke vorm behouden.",es:"Ramas muertas, dañadas, hacia dentro. Vaciar copa, mantener forma natural."},
+   op:{nl:"Niet snoeien tijdens bloei of vruchtzetting. Waterloten weg.",es:"No podar en flor o con fruta. Quitar chupones."}}
+];
+
+const PROBLEMEN=[
+  {plant:{nl:"Bosvaren",es:"Helecho"},symptoom:{nl:"Bladvlekkenschimmel",es:"Hongo de manchas en hoja"},
+   oorzaak:{nl:"Te veel hitte · stress · voedingstekort · onregelmatige watergift",es:"Calor · estrés · falta de nutrientes · riego irregular"},
+   advies:{nl:"Cystium N (zie producten). Oud blad sterft aan einde seizoen af. 1–2× per week diep water geven.",es:"Cystium N (ver productos). La hoja vieja muere al final de temporada. Riego profundo 1–2× por semana."}},
+  {plant:{nl:"Asplenium nidus",es:"Asplenium nidus"},symptoom:{nl:"Bladverbranding",es:"Quemadura de hoja"},
+   oorzaak:{nl:"Te veel hitte · onregelmatige watergift",es:"Calor · riego irregular"},
+   advies:{nl:"Meer schaduw en gelijkmatiger water geven.",es:"Más sombra y riego más regular."}},
+  {plant:{nl:"Granaatappel (Punica granatum)",es:"Granado (Punica granatum)"},symptoom:{nl:"Vergeling van het blad",es:"Amarilleo de la hoja"},
+   oorzaak:{nl:"Waterstress · voedingstekort · wortelproblemen · slechte drainage",es:"Estrés hídrico · falta de nutrientes · raíces · mal drenaje"},
+   advies:{nl:"Drainage en watergift controleren, voeding volgens schema.",es:"Revisar drenaje y riego, abono según esquema."}},
+  {plant:{nl:"Strelitzia",es:"Strelitzia"},symptoom:{nl:"Schimmel op afstervend bladweefsel",es:"Hongo en tejido muerto"},
+   oorzaak:{nl:"Water tussen de bladeren · natte grond · slechte drainage",es:"Agua entre hojas · suelo mojado · mal drenaje"},
+   advies:{nl:"Hart controleren, zieke bladeren verwijderen, drainage verbeteren.",es:"Revisar el corazón, quitar hojas enfermas, mejorar drenaje."}},
+  {plant:{nl:"Oleander (La Cabaña)",es:"Adelfa (La Cabaña)"},symptoom:{nl:"Onderaan kaal, gelige bladeren, bloei alleen op toppen",es:"Pelado abajo, hojas amarillas, flor solo arriba"},
+   oorzaak:{nl:"Waarschijnlijk niet gesnoeid · te weinig voeding · te weinig/veel water · slechte drainage",es:"No podado · poca comida · poco/mucho agua · mal drenaje"},
+   advies:{nl:"Voeding volgens schema. Na bloei 1/3 van de oude takken laag terugsnoeien — niet alles in één keer, rest volgend jaar.",es:"Abono según esquema. Tras florecer, 1/3 de ramas viejas desde abajo — no todo de una vez, el resto el año siguiente."}},
+  {plant:{nl:"Toscaanse jasmijn (La Cabaña)",es:"Jazmín toscano (La Cabaña)"},symptoom:{nl:"Groeit nauwelijks boven bij La Cabaña",es:"Apenas crece arriba en La Cabaña"},
+   oorzaak:{nl:"Compacte grond · slechte wortelontwikkeling · arme bodem · slechte drainage · te weinig zon · mogelijk cement/palen in de grond",es:"Suelo compacto · raíces · suelo pobre · mal drenaje · poco sol · posible cemento/postes"},
+   advies:{nl:"Bodemstructuur verbeteren, regelmatig bemesten, drainage verbeteren. Min. 4–6 u zon (6–8 u voor bloei/geur) of in bakken met drainage onderin.",es:"Mejorar suelo, abonar regular, mejorar drenaje. Mín. 4–6 h sol (6–8 h para flor/aroma) o en macetas con drenaje."}},
+  {plant:{nl:"Níspero (wolmispel)",es:"Níspero"},symptoom:{nl:"Vruchtval / verzwakking",es:"Caída de fruta / debilidad"},
+   oorzaak:{nl:"Over- of onderbewatering · slechte drainage · voedseltekort (N en K) · hitte/droogte · wind · wortelschade · wortelrot",es:"Riego excesivo/escaso · mal drenaje · falta de N y K · calor/sequía · viento · raíces · podredumbre"},
+   advies:{nl:"Bodemvocht en drainage controleren, diep maar niet te vaak water. Bodem verbeteren met organisch materiaal (maandelijks). Beschadigde takken weg, op ziekten en plagen controleren.",es:"Revisar humedad y drenaje, riego profundo no frecuente. Mejorar suelo con materia orgánica (mensual). Quitar ramas dañadas, vigilar plagas."}}
+];
+
+const PRODUCTEN=[
+  {n:"Ficosturf",voor:{nl:"Gras",es:"Césped"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand",es:"1× al mes"},
+   d:{nl:"Met Ficosagro in 1 rugzak. Versterkt het gazon en maakt het groener. Op de bodem, licht water vooraf en 1–2 u erna.",es:"Con Ficosagro en una mochila. Fortalece y reverdece el césped. Sobre suelo, riego ligero antes y 1–2 h después."}},
+  {n:"Ficosagro",voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand",es:"1× al mes"},
+   d:{nl:"Activeert het bodemleven. Combineer met Ficosturf (gras) of Cystium-K (planten).",es:"Activa el suelo. Combina con Ficosturf (césped) o Cystium-K (plantas)."}},
+  {n:"Cystium-K",voor:{nl:"Buitenplanten, citrus, struiken",es:"Plantas, cítricos, arbustos"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand",es:"1× al mes"},
+   d:{nl:"Met Ficosagro in 1 rugzak. Ondersteunt bloei en groei. Op het blad, licht water vooraf, 1 u erna.",es:"Con Ficosagro en una mochila. Estimula flor y crecimiento. Sobre hoja, riego ligero antes, 1 h después."}},
+  {n:"Cystium N",voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Alleen indien nodig",es:"Solo si es necesario"},freq:{nl:"Afhankelijk van situatie",es:"Según situación"},
+   d:{nl:"ALLEEN bij extreme hitte, droogte, na snoei/verplanten of stress. Anti-stress en herstel. Goed schudden vóór gebruik. Ruim water vooraf en erna. Dosering gras: normaal 100 ml / 16 L (zona privado 2 tanks voor 700 m²); superstress 150 ml / 16 L. Planten: normaal 25–30 ml / 16 L, superstress 40 ml / 16 L.",es:"SOLO con calor extremo, sequía, tras poda/trasplante o estrés. Anti-estrés y recuperación. Agitar bien antes. Riego antes y después. Dosis césped: normal 100 ml / 16 L (zona privado 2 tanks para 700 m²); súper estrés 150 ml / 16 L. Plantas: normal 25–30 ml / 16 L, súper estrés 40 ml / 16 L."}},
+  {n:"Purín de Ortiga (schimmel)",voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand, 2 wk ná Ficos/Cystium",es:"1× al mes, 2 sem tras Ficos/Cystium"},
+   d:{nl:"Preventief tegen schimmeldruk. Blad beide zijden. NIET combineren met Azufre.",es:"Preventivo contra hongos. Hoja por ambos lados. NO combinar con Azufre."}},
+  {n:"Purín de Ortiga (insect)",voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand, 2 wk ná Ficos/Cystium",es:"1× al mes, 2 sem tras Ficos/Cystium"},
+   d:{nl:"Natuurlijke weerstand, vermindert insectendruk. Blad beide zijden.",es:"Resistencia natural, reduce insectos. Hoja por ambos lados."}},
+  {n:"Batlle abono ecológico césped",voor:{nl:"Gras",es:"Césped"},per:{nl:"Maart, juni, september",es:"Marzo, junio, septiembre"},freq:{nl:"3× per jaar",es:"3× al año"},
+   d:{nl:"Organische gazonmest (N-P-K 8-4-6). Buiten de hitte en winter. Licht water vooraf en erna.",es:"Abono orgánico césped (8-4-6). Fuera del calor y del invierno. Riego antes y después."}},
+  {n:"Batlle abono universal",voor:{nl:"Planten, citrus, struiken, bomen",es:"Plantas, cítricos, arbustos, árboles"},per:{nl:"Maart, juni, september",es:"Marzo, junio, septiembre"},freq:{nl:"3× per jaar",es:"3× al año"},
+   d:{nl:"Organisch (N-P-K 6-4-6 / 7-3-6, 50–70% organisch). Korrels rondom, licht door de aarde. Ideale temp 15–25°C, niet in hitte/kou.",es:"Orgánico (6-4-6 / 7-3-6, 50–70% materia orgánica). Bolitas alrededor, ligeras en la tierra. Temp ideal 15–25°C."}},
+  {n:"Azufre (Garden Pallarès)",voor:{nl:"Fruitbomen, groente, druif",es:"Frutales, huerto, vid"},per:{nl:"Februari–oktober",es:"Febrero–octubre"},freq:{nl:"Elke 2 weken indien nodig",es:"Cada 2 semanas si hace falta"},
+   d:{nl:"Alleen bij erge schimmel, vooral op groenten. Tegen meeldauw (oído) en mijten (ácaros). NIET boven 28–30°C en NIET samen met Purín de Ortiga. Water geven na 24 u.",es:"Solo con mucho hongo, sobre todo verduras. Contra oído y ácaros. NO encima de 28–30°C ni con Purín de Ortiga. Regar tras 24 h."}},
+  {n:"Ferrare Evo (ijzer)",voor:{nl:"Planten, citrus, bomen, struiken",es:"Plantas, cítricos, árboles, arbustos"},per:{nl:"Feb–begin juni · sept–nov",es:"Feb–inicio junio · sept–nov"},freq:{nl:"1× (herhalen na 6–8 wk indien nodig)",es:"1× (repetir tras 6–8 sem si hace falta)"},
+   d:{nl:"Bij ijzertekort, alleen bij temp 15–25°C (niet boven 25, niet onder 15). Op de bodem, licht water vooraf en meteen erna.",es:"Con falta de hierro, solo a 15–25°C. Sobre suelo, riego ligero antes y justo después."}},
+  {n:"Schneckenkorn Protector MaXX",voor:{nl:"Slakken (ook naakt)",es:"Caracoles y babosas"},per:{nl:"Februari–november",es:"Febrero–noviembre"},freq:{nl:"Evalueren na 14 dagen, evt. 1× herhalen",es:"Evaluar tras 14 días, repetir 1× si hace falta"},
+   d:{nl:"Alleen bij vraatschade. IJzerfosfaat (ferrifosfaat = eco). Op de bodem. Voor groente en planten.",es:"Solo con daño de mordiscos. Fosfato de hierro (eco). Sobre suelo. Para huerto y plantas."}},
+  {n:"Compo Agrosil",voor:{nl:"Gras, planten, bomen, struiken",es:"Césped, plantas, árboles, arbustos"},per:{nl:"Alleen bij nieuwe aanplant",es:"Solo en plantación nueva"},freq:{nl:"Incidenteel",es:"Puntual"},
+   d:{nl:"Wortelstimulant, niet 100% biologisch. Voegt weinig toe aan de Ficosterra-producten — niet mengen met de vaste maandproducten.",es:"Estimulante de raíz, no 100% biológico. Aporta poco a los productos Ficosterra — no mezclar con los fijos mensuales."}}
+];
+
+/* ============ STATE + RENDER ============ */
+let lang="nl";
+const now=new Date();
+const curM=now.getDate? now.getMonth():5;
+const curWeek=Math.min(4,Math.floor((now.getDate()-1)/7)+1);
+let selM=curM, selSeason=CAL[curM].season, curTab="nu";
+const cats=["grass","plant","mest","snoei","alert","rust"];
+
+function L(o){return o?(o[lang]||o.nl):""}
+function setLang(l){lang=l;document.getElementById("nl").classList.toggle("active",l=="nl");
+  document.getElementById("es").classList.toggle("active",l=="es");
+  document.documentElement.lang=l;renderAll()}
+
+function buildNav(){
+  const n=document.getElementById("nav");n.innerHTML="";
+  Object.keys(T.nav).forEach(k=>{
+    const b=document.createElement("button");b.textContent=L(T.nav[k]);
+    b.className=k==curTab?"active":"";b.onclick=()=>{curTab=k;showTab(k);buildNav()};n.appendChild(b)})}
+function showTab(k){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  document.getElementById("v-"+k).classList.add("active");window.scrollTo(0,0)}
+
+function taskCard(t,highlightWeek){
+  const c=t.cat;
+  let cls="card "+c, hl="";
+  if(highlightWeek&&t.when){ /* highlight if matches current week */ }
+  let h=`<div class="card ${c}"><div class="ttl"><span class="tag ${c}">${L(T.legend)[cats.indexOf(c)]}</span>${L(t.ttl)}</div>`;
+  if(t.body)h+=`<div class="body">${L(t.body)}</div>`;
+  if(t.when)h+=`<div class="when">⏱ ${L(t.when)}</div>`;
+  if(t.meta)h+=`<div class="meta"><span>${L(t.meta)}</span></div>`;
+  h+=`</div>`;return h}
+
+function legendHTML(){let h='<div class="legend">';
+  const cols={grass:"var(--leaf)",plant:"var(--olive)",mest:"var(--gold)",snoei:"var(--terra)",alert:"#c0392b",rust:"#9aa0a6"};
+  cats.forEach((c,i)=>h+=`<span><i style="background:${cols[c]}"></i>${L(T.legend)[i]}</span>`);
+  return h+'</div>'}
+
+function renderNu(){
+  const tasks=CAL[curM].tasks, s=CAL[curM].season;
+  let h=`<div class="now-banner"><div class="label">${L(T.thisMonth)} · ${L(SEASONS[s])}</div>
+    <div class="big">${MONTHS[lang][curM]}</div>`;
+  const weekTasks=tasks.filter(t=>t.when&&/week 1/i.test(L(t.when)));
+  h+=`<div class="small">${L(T.thisWeek)}: ${L({nl:"week",es:"semana"})} ${curWeek} — ${L(T.weekHint)}</div></div>`;
+  h+=legendHTML();
+  if(!tasks.length||tasks.every(t=>t.cat=="rust")){
+    h+=tasks.map(t=>taskCard(t)).join("");
+  }else{
+    h+=`<h2 class="section">${MONTHS[lang][curM]}</h2>`;
+    h+=tasks.map(t=>taskCard(t,true)).join("");
+  }
+  document.getElementById("v-nu").innerHTML=h}
+
+function renderMaand(){
+  let h=`<h2 class="section">${L(T.pickMonth)}</h2><div class="month-grid">`;
+  for(let m=0;m<12;m++){const cl=(m==curM?"cur ":"")+(m==selM?"sel":"");
+    h+=`<button class="${cl}" onclick="selM=${m};renderMaand()">${MONTHS[lang][m].slice(0,3)}</button>`}
+  h+=`</div>`+legendHTML();
+  const tasks=CAL[selM].tasks;
+  h+=`<h2 class="section">${MONTHS[lang][selM]} · ${L(SEASONS[CAL[selM].season])}</h2>`;
+  h+=tasks.length?tasks.map(t=>taskCard(t)).join(""):`<div class="empty">${L(T.nothing)}</div>`;
+  document.getElementById("v-maand").innerHTML=h}
+
+function renderSeizoen(){
+  let h=`<h2 class="section">${L(T.pickSeason)}</h2><div class="season-row">`;
+  Object.keys(SEASONS).forEach(s=>{h+=`<button class="${s==selSeason?'sel':''}" onclick="selSeason='${s}';renderSeizoen()">${L(SEASONS[s])}</button>`});
+  h+=`</div>`+legendHTML();
+  SEASONS[selSeason].m.forEach(m=>{
+    h+=`<h2 class="section">${MONTHS[lang][m]}</h2>`;
+    const tasks=CAL[m].tasks;
+    h+=tasks.length?tasks.map(t=>taskCard(t)).join(""):`<div class="empty">${L(T.nothing)}</div>`});
+  document.getElementById("v-seizoen").innerHTML=h}
+
+function renderSnoei(){
+  let h=`<h2 class="section">${L(T.nav.snoei)}</h2>`;
+  SNOEI.forEach(p=>{h+=`<details><summary>${L(p.plant)}<span class="pill">${L(p.tijd)}</span></summary>
+    <div class="dbody">
+      <div class="row"><b>${L({nl:"Hoe snoeien",es:"Cómo podar"})}</b>${L(p.hoe)}</div>
+      <div class="row"><b>${L({nl:"Let op",es:"Atención"})}</b>${L(p.op)}</div>
+    </div></details>`});
+  document.getElementById("v-snoei").innerHTML=h}
+
+function renderProblemen(){
+  let h=`<h2 class="section">${L(T.nav.problemen)}</h2>`;
+  PROBLEMEN.forEach(p=>{h+=`<details><summary>${L(p.plant)}<span class="pill">${L(p.symptoom)}</span></summary>
+    <div class="dbody">
+      <div class="row"><b>${L({nl:"Mogelijke oorzaak",es:"Posible causa"})}</b>${L(p.oorzaak)}</div>
+      <div class="row"><b>${L({nl:"Advies",es:"Consejo"})}</b>${L(p.advies)}</div>
+    </div></details>`});
+  document.getElementById("v-problemen").innerHTML=h}
+
+function renderProducten(){
+  let h=`<h2 class="section">${L(T.nav.producten)}</h2>
+   <p class="note">${L({nl:"Behandelingen bij hitte: vroege ochtend of late avond. Geduld en consequentie zijn de factor.",es:"Tratamientos con calor: temprano o por la tarde. Paciencia y constancia es la clave."})}</p>`;
+  PRODUCTEN.forEach(p=>{h+=`<details><summary>${p.n}<span class="pill">${L(p.freq)}</span></summary>
+    <div class="dbody">
+      <div class="row"><b>${L({nl:"Voor",es:"Para"})}</b>${L(p.voor)}</div>
+      <div class="row"><b>${L({nl:"Periode",es:"Periodo"})}</b>${L(p.per)}</div>
+      <div class="row"><b>${L({nl:"Gebruik",es:"Uso"})}</b>${L(p.d)}</div>
+    </div></details>`});
+  document.getElementById("v-producten").innerHTML=h}
+
+function renderAll(){buildNav();renderNu();renderMaand();renderSeizoen();renderSnoei();renderProblemen();renderProducten();
+  document.querySelectorAll("[data-i]").forEach(e=>{const k=e.getAttribute("data-i");if(T[k])e.textContent=L(T[k])})}
+renderAll();showTab(curTab);
+</script>
+</body>
+</html>
