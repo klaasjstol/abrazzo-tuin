@@ -113,6 +113,7 @@
   <div id="v-snoei" class="view"></div>
   <div id="v-problemen" class="view"></div>
   <div id="v-producten" class="view"></div>
+  <div id="v-doseringen" class="view"></div>
 </main>
 <footer>
   <span data-i="footer">Gebaseerd op het verzorgingsschema van Tuli · Abrazzo, Sant Andreu de Llavaneres</span>
@@ -122,7 +123,7 @@
 /* ============ DATA ============ */
 const T = {
   nav:{nu:{nl:"Nu",es:"Ahora"},maand:{nl:"Per maand",es:"Por mes"},seizoen:{nl:"Per seizoen",es:"Por temporada"},
-    snoei:{nl:"Snoei",es:"Poda"},problemen:{nl:"Plantproblemen",es:"Problemas"},producten:{nl:"Producten",es:"Productos"}},
+    snoei:{nl:"Snoei",es:"Poda"},problemen:{nl:"Plantproblemen",es:"Problemas"},producten:{nl:"Producten",es:"Productos"},doseringen:{nl:"Doseringen",es:"Dosis"}},
   subtitle:{nl:"Wat te doen — per week, maand en seizoen",es:"Qué hacer — por semana, mes y temporada"},
   footer:{nl:"Gebaseerd op het verzorgingsschema van Tuli · Abrazzo, Sant Andreu de Llavaneres",
     es:"Basado en el esquema de cuidado de Tuli · Abrazzo, Sant Andreu de Llavaneres"},
@@ -158,7 +159,7 @@ const purin={cat:"plant",
   body:{nl:"Gras én planten. Preventief tegen schimmel- en insectendruk. Versterkt de natuurlijke weerstand.",
         es:"Césped y plantas. Preventivo contra hongos e insectos. Refuerza la resistencia natural."},
   when:{nl:"Week 3 — 2 weken ná Ficos/Cystium",es:"Semana 3 — 2 semanas tras Ficos/Cystium"},
-  meta:{nl:"Blad beide zijden · niet combineren met Azufre",es:"Hoja por ambos lados · no combinar con Azufre"}};
+  meta:{nl:"Blad beide zijden · ⚠ nooit samen met Azufre",es:"Hoja por ambos lados · ⚠ nunca junto con Azufre"}};
 const mest=(n)=>({cat:"mest",
   ttl:{nl:"Organische bemesting ("+n+"/3)",es:"Abono orgánico ("+n+"/3)"},
   body:{nl:"Gras: Batlle césped (8-4-6). Planten/bomen: Batlle universal (6-4-6). Korrels licht door de aarde.",
@@ -317,8 +318,8 @@ const PRODUCTEN=[
    d:{nl:"Organische gazonmest (N-P-K 8-4-6). Buiten de hitte en winter. Licht water vooraf en erna.",es:"Abono orgánico césped (8-4-6). Fuera del calor y del invierno. Riego antes y después."}},
   {n:"Batlle abono universal",voor:{nl:"Planten, citrus, struiken, bomen",es:"Plantas, cítricos, arbustos, árboles"},per:{nl:"Maart, juni, september",es:"Marzo, junio, septiembre"},freq:{nl:"3× per jaar",es:"3× al año"},
    d:{nl:"Organisch (N-P-K 6-4-6 / 7-3-6, 50–70% organisch). Korrels rondom, licht door de aarde. Ideale temp 15–25°C, niet in hitte/kou.",es:"Orgánico (6-4-6 / 7-3-6, 50–70% materia orgánica). Bolitas alrededor, ligeras en la tierra. Temp ideal 15–25°C."}},
-  {n:"Azufre (Garden Pallarès)",voor:{nl:"Fruitbomen, groente, druif",es:"Frutales, huerto, vid"},per:{nl:"Februari–oktober",es:"Febrero–octubre"},freq:{nl:"Elke 2 weken indien nodig",es:"Cada 2 semanas si hace falta"},
-   d:{nl:"Alleen bij erge schimmel, vooral op groenten. Tegen meeldauw (oído) en mijten (ácaros). NIET boven 28–30°C en NIET samen met Purín de Ortiga. Water geven na 24 u.",es:"Solo con mucho hongo, sobre todo verduras. Contra oído y ácaros. NO encima de 28–30°C ni con Purín de Ortiga. Regar tras 24 h."}},
+  {n:"Azufre (Garden Pallarès)",voor:{nl:"Moestuin (groente), fruitbomen, druif",es:"Huerto (verduras), frutales, vid"},per:{nl:"Februari–oktober",es:"Febrero–octubre"},freq:{nl:"Elke 2 weken indien nodig",es:"Cada 2 semanas si hace falta"},
+   d:{nl:"Vooral voor de moestuin: alleen bij veel schimmel op de groente. Tegen meeldauw (oído) en mijten (ácaros). Water geven 24 u erna. ⚠ NOOIT samen met Purín de Ortiga. ⚠ NOOIT boven 28°C.",es:"Sobre todo para el huerto: solo con mucho hongo en las verduras. Contra oído y ácaros. Regar 24 h después. ⚠ NUNCA junto con Purín de Ortiga. ⚠ NUNCA por encima de 28°C."}},
   {n:"Ferrare Evo (ijzer)",voor:{nl:"Planten, citrus, bomen, struiken",es:"Plantas, cítricos, árboles, arbustos"},per:{nl:"Feb–begin juni · sept–nov",es:"Feb–inicio junio · sept–nov"},freq:{nl:"1× (herhalen na 6–8 wk indien nodig)",es:"1× (repetir tras 6–8 sem si hace falta)"},
    d:{nl:"Bij ijzertekort, alleen bij temp 15–25°C (niet boven 25, niet onder 15). Op de bodem, licht water vooraf en meteen erna.",es:"Con falta de hierro, solo a 15–25°C. Sobre suelo, riego ligero antes y justo después."}},
   {n:"Schneckenkorn Protector MaXX",voor:{nl:"Slakken (ook naakt)",es:"Caracoles y babosas"},per:{nl:"Februari–november",es:"Febrero–noviembre"},freq:{nl:"Evalueren na 14 dagen, evt. 1× herhalen",es:"Evaluar tras 14 días, repetir 1× si hace falta"},
@@ -428,7 +429,32 @@ function renderProducten(){
     </div></details>`});
   document.getElementById("v-producten").innerHTML=h}
 
-function renderAll(){buildNav();renderNu();renderMaand();renderSeizoen();renderSnoei();renderProblemen();renderProducten();
+function renderDoseringen(){
+  let h=`<h2 class="section">${L({nl:"Doseringen & zones",es:"Dosis y zonas"})}</h2>`;
+  h+=`<p class="note">${L({nl:"1 rugzak (mochila) = 16 L water. Onderstaande doseringen gelden voor Cystium N (anti-stress). Voor de overige producten vult Tuli de ml per rugzak nog aan.",es:"1 mochila = 16 L de agua. Las dosis de abajo son para Cystium N (anti-estrés). Para los demás productos, Tuli completará los ml por mochila."})}</p>`;
+  h+=`<h2 class="section">${L({nl:"Zones",es:"Zonas"})}</h2>`;
+  h+=`<table><tr><th>${L({nl:"Zone",es:"Zona"})}</th><th>${L({nl:"Oppervlak",es:"Superficie"})}</th><th>${L({nl:"Rugzakken gras",es:"Mochilas césped"})}</th></tr>`;
+  const zones=[
+    {z:"Zona privado",o:{nl:"700 m² gras + planten",es:"700 m² césped + plantas"},r:"2"},
+    {z:"Zona piscina",o:{nl:"350 m² gras + planten",es:"350 m² césped + plantas"},r:{nl:"1 (samen)",es:"1 (juntos)"}},
+    {z:"Plaza pueblo",o:{nl:"± 150 m² planten",es:"± 150 m² plantas"},r:"—"}
+  ];
+  zones.forEach(z=>h+=`<tr><td><b>${z.z}</b></td><td>${L(z.o)}</td><td>${typeof z.r==="string"?z.r:L(z.r)}</td></tr>`);
+  h+=`</table>`;
+  h+=`<h2 class="section">Cystium N — ${L({nl:"ml per rugzak (16 L)",es:"ml por mochila (16 L)"})}</h2>`;
+  h+=`<table><tr><th>${L({nl:"Toepassing",es:"Aplicación"})}</th><th>${L({nl:"Normaal",es:"Normal"})}</th><th>${L({nl:"Superstress",es:"Súper estrés"})}</th></tr>`;
+  const dos=[
+    {t:{nl:"Gras",es:"Césped"},n:"100 ml",s:"150 ml"},
+    {t:{nl:"Planten — zona privado",es:"Plantas — zona privado"},n:"25 ml",s:"40 ml"},
+    {t:{nl:"Planten — zona piscina",es:"Plantas — zona piscina"},n:"30 ml",s:{nl:"met gras",es:"con césped"}},
+    {t:{nl:"Planten — plaza pueblo",es:"Plantas — plaza pueblo"},n:"25 ml",s:"40 ml"}
+  ];
+  dos.forEach(d=>h+=`<tr><td>${L(d.t)}</td><td>${typeof d.n==="string"?d.n:L(d.n)}</td><td>${typeof d.s==="string"?d.s:L(d.s)}</td></tr>`);
+  h+=`</table>`;
+  h+=`<p class="note">${L({nl:"Goed schudden vóór gebruik. Ruim water vóór en ná. Alleen bij extreme hitte, droogte, na snoei of stress.",es:"Agitar bien antes. Riego abundante antes y después. Solo con calor extremo, sequía, tras poda o estrés."})}</p>`;
+  h+=`<div class="card alert"><div class="ttl"><span class="tag alert">${L({nl:"Aanvullen",es:"Completar"})}</span>${L({nl:"Nog toe te voegen",es:"Por añadir"})}</div><div class="body">${L({nl:"Dosering per rugzak voor Ficosturf, Ficosagro, Cystium-K, Purín de Ortiga en de bemesting — zodra Tuli de ml per rugzak doorgeeft, zet ik ze hier in dezelfde tabel.",es:"Dosis por mochila de Ficosturf, Ficosagro, Cystium-K, Purín de Ortiga y el abono — en cuanto Tuli pase los ml por mochila, los añado aquí en la misma tabla."})}</div></div>`;
+  document.getElementById("v-doseringen").innerHTML=h}
+function renderAll(){buildNav();renderNu();renderMaand();renderSeizoen();renderSnoei();renderProblemen();renderProducten();renderDoseringen();
   document.querySelectorAll("[data-i]").forEach(e=>{const k=e.getAttribute("data-i");if(T[k])e.textContent=L(T[k])})}
 renderAll();showTab(curTab);
 </script>
