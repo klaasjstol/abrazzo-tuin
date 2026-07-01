@@ -149,9 +149,9 @@ const grasCombo={cat:"grass",
   when:{nl:"Week 1 van de maand",es:"Semana 1 del mes"},
   meta:{nl:"Op de bodem · licht water vooraf, 1–2 u erna",es:"Sobre el suelo · riego ligero antes, 1–2 h después"}};
 const plantCombo={cat:"plant",
-  ttl:{nl:"Planten: Cystium-K + Ficosagro",es:"Plantas: Cystium-K + Ficosagro"},
-  body:{nl:"Samen in 1 rugzak. Voor buitenplanten incl. citrus en struiken — ondersteunt bloei en groei.",
-        es:"Juntos en una mochila. Plantas exteriores incl. cítricos y arbustos — estimula flor y crecimiento."},
+  ttl:{nl:"Planten: Cystium N + Ficosagro",es:"Plantas: Cystium N + Ficosagro"},
+  body:{nl:"Samen in 1 rugzak. Voor buitenplanten incl. citrus en struiken — Cystium N = voeding, ondersteunt bloei en groei. Vloeibare Fico-producten mogen samen gemengd worden.",
+        es:"Juntos en una mochila. Plantas exteriores incl. cítricos y arbustos — Cystium N = nutrición, estimula flor y crecimiento. Los productos Fico líquidos se pueden mezclar."},
   when:{nl:"Week 1 van de maand",es:"Semana 1 del mes"},
   meta:{nl:"Op het blad · licht water vooraf, 1 u erna",es:"Sobre la hoja · riego ligero antes, 1 h después"}};
 const purin={cat:"plant",
@@ -207,14 +207,14 @@ const CAL={
      body:{nl:"Alle behandelingen in de vroege ochtend of late avond. GEEN organische bemesting (te heet).",
            es:"Todos los tratamientos por la mañana temprano o por la tarde. SIN abono orgánico (calor)."}},
     grasCombo,plantCombo,purin,
-    {cat:"plant",ttl:{nl:"Cystium N — alleen bij stress",es:"Cystium N — solo con estrés"},
-     body:{nl:"Bij extreme hitte, droogte of na snoei: anti-stress en herstel. Goed schudden. Ruim water vooraf en erna.",
-           es:"Con calor extremo, sequía o tras poda: anti-estrés y recuperación. Agitar bien. Riego antes y después."},
+    {cat:"plant",ttl:{nl:"Cystium K — alleen bij stress",es:"Cystium K — solo con estrés"},
+     body:{nl:"Cystium K = anti-stress. Bij extreme hitte, droogte of na snoei: herstel. Goed schudden. Ruim water vooraf en erna.",
+           es:"Cystium K = anti-estrés. Con calor extremo, sequía o tras poda: recuperación. Agitar bien. Riego antes y después."},
      when:{nl:"Indien nodig",es:"Si es necesario"}}]},
   7:{season:"zomer",tasks:[
     {cat:"alert",ttl:{nl:"Hitte — werk vroeg of laat",es:"Calor — trabaja temprano o tarde"},
-     body:{nl:"Behandelingen vroege ochtend / late avond. Geen bemesting. Cystium N bij hittestress.",
-           es:"Tratamientos temprano / tarde. Sin abono. Cystium N con estrés por calor."}},
+     body:{nl:"Behandelingen vroege ochtend / late avond. Geen bemesting. Cystium K bij hittestress.",
+           es:"Tratamientos temprano / tarde. Sin abono. Cystium K con estrés por calor."}},
     grasCombo,plantCombo,purin,
     {cat:"snoei",ttl:{nl:"Oleander — na de bloei",es:"Adelfa — tras florecer"},
      body:{nl:"Eind zomer, direct na de bloei. Jaarlijks ~1/3 van de oudste takken laag bij de basis weg.",
@@ -271,7 +271,7 @@ const SNOEI=[
 const PROBLEMEN=[
   {plant:{nl:"Bosvaren",es:"Helecho"},symptoom:{nl:"Bladvlekkenschimmel",es:"Hongo de manchas en hoja"},
    oorzaak:{nl:"Te veel hitte · stress · voedingstekort · onregelmatige watergift",es:"Calor · estrés · falta de nutrientes · riego irregular"},
-   advies:{nl:"Cystium N (zie producten). Oud blad sterft aan einde seizoen af. 1–2× per week diep water geven.",es:"Cystium N (ver productos). La hoja vieja muere al final de temporada. Riego profundo 1–2× por semana."}},
+   advies:{nl:"Cystium K (anti-stress, zie producten). Oud blad sterft aan einde seizoen af. 1–2× per week diep water geven.",es:"Cystium K (anti-estrés, ver productos). La hoja vieja muere al final de temporada. Riego profundo 1–2× por semana."}},
   {plant:{nl:"Asplenium nidus",es:"Asplenium nidus"},symptoom:{nl:"Bladverbranding",es:"Quemadura de hoja"},
    oorzaak:{nl:"Te veel hitte · onregelmatige watergift",es:"Calor · riego irregular"},
    advies:{nl:"Meer schaduw en gelijkmatiger water geven.",es:"Más sombra y riego más regular."}},
@@ -305,11 +305,11 @@ const PRODUCTEN=[
   {n:"Ficosturf",dose:{nl:"80 ml per rugzak (5 ml/L). Officieel: apart toepassen, chloorvrij water, niet mengen.",es:"80 ml por mochila (5 ml/L). Oficial: aplicar solo, agua sin cloro, sin mezclar."},voor:{nl:"Gras",es:"Césped"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand",es:"1× al mes"},
    d:{nl:"Met Ficosagro in 1 rugzak. Versterkt het gazon en maakt het groener. Op de bodem, licht water vooraf en 1–2 u erna.",es:"Con Ficosagro en una mochila. Fortalece y reverdece el césped. Sobre suelo, riego ligero antes y 1–2 h después."}},
   {n:"Ficosagro",dose:{nl:"400 ml per rugzak (≈26 ml/L) als gietbeurt rond de wortels. Apart — levende microben.",es:"400 ml por mochila (≈26 ml/L) en riego a la raíz. Aparte — microbios vivos."},voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand",es:"1× al mes"},
-   d:{nl:"Activeert het bodemleven. Combineer met Ficosturf (gras) of Cystium-K (planten).",es:"Activa el suelo. Combina con Ficosturf (césped) o Cystium-K (plantas)."}},
-  {n:"Cystium-K",dose:{nl:"40 ml per rugzak (2–3,5 ml/L).",es:"40 ml por mochila (2–3,5 ml/L)."},voor:{nl:"Buitenplanten, citrus, struiken",es:"Plantas, cítricos, arbustos"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand",es:"1× al mes"},
-   d:{nl:"Met Ficosagro in 1 rugzak. Ondersteunt bloei en groei. Op het blad, licht water vooraf, 1 u erna.",es:"Con Ficosagro en una mochila. Estimula flor y crecimiento. Sobre hoja, riego ligero antes, 1 h después."}},
-  {n:"Cystium N",dose:{nl:"Gras boven 60 ml/rugzak (2×); zwembad 120 ml; planten 25–40 ml. Zie Doseringen-tab.",es:"Césped arriba 60 ml/mochila (2×); piscina 120 ml; plantas 25–40 ml. Ver pestaña Dosis."},voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Alleen indien nodig",es:"Solo si es necesario"},freq:{nl:"Afhankelijk van situatie",es:"Según situación"},
-   d:{nl:"ALLEEN bij extreme hitte, droogte, na snoei/verplanten of stress. Anti-stress en herstel. Goed schudden vóór gebruik. Ruim water vooraf en erna. Dosering gras: normaal 100 ml / 16 L (zona privado 2 tanks voor 700 m²); superstress 150 ml / 16 L. Planten: normaal 25–30 ml / 16 L, superstress 40 ml / 16 L.",es:"SOLO con calor extremo, sequía, tras poda/trasplante o estrés. Anti-estrés y recuperación. Agitar bien antes. Riego antes y después. Dosis césped: normal 100 ml / 16 L (zona privado 2 tanks para 700 m²); súper estrés 150 ml / 16 L. Plantas: normal 25–30 ml / 16 L, súper estrés 40 ml / 16 L."}},
+   d:{nl:"Activeert het bodemleven. Combineer met Ficosturf (gras) of Cystium N (planten).",es:"Activa el suelo. Combina con Ficosturf (césped) o Cystium N (plantas)."}},
+  {n:"Cystium N",dose:{nl:"40 ml per rugzak (2–3,5 ml/L).",es:"40 ml por mochila (2–3,5 ml/L)."},voor:{nl:"Buitenplanten, citrus, struiken",es:"Plantas, cítricos, arbustos"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand",es:"1× al mes"},
+   d:{nl:"N = voeding. Met Ficosagro in 1 rugzak. Ondersteunt bloei en groei. Op het blad, licht water vooraf, 1 u erna.",es:"N = nutrición. Con Ficosagro en una mochila. Estimula flor y crecimiento. Sobre hoja, riego ligero antes, 1 h después."}},
+  {n:"Cystium K",dose:{nl:"Gras boven 60 ml/rugzak (2×); zwembad 120 ml; planten 25–40 ml. Zie Doseringen-tab.",es:"Césped arriba 60 ml/mochila (2×); piscina 120 ml; plantas 25–40 ml. Ver pestaña Dosis."},voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Alleen indien nodig",es:"Solo si es necesario"},freq:{nl:"Afhankelijk van situatie",es:"Según situación"},
+   d:{nl:"K = anti-stress. ALLEEN bij extreme hitte, droogte, na snoei/verplanten of stress. Herstel. Goed schudden vóór gebruik. Ruim water vooraf en erna. Dosering gras: normaal 100 ml / 16 L (zona privado 2 tanks voor 700 m²); superstress 150 ml / 16 L. Planten: normaal 25–30 ml / 16 L, superstress 40 ml / 16 L.",es:"K = anti-estrés. SOLO con calor extremo, sequía, tras poda/trasplante o estrés. Recuperación. Agitar bien antes. Riego antes y después. Dosis césped: normal 100 ml / 16 L (zona privado 2 tanks para 700 m²); súper estrés 150 ml / 16 L. Plantas: normal 25–30 ml / 16 L, súper estrés 40 ml / 16 L."}},
   {n:"Purín de Ortiga (schimmel)",dose:{nl:"320 ml per rugzak (15–30 ml/L). Niet in volle zon.",es:"320 ml por mochila (15–30 ml/L). No a pleno sol."},voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand, 2 wk ná Ficos/Cystium",es:"1× al mes, 2 sem tras Ficos/Cystium"},
    d:{nl:"Preventief tegen schimmeldruk. Blad beide zijden. NIET combineren met Azufre.",es:"Preventivo contra hongos. Hoja por ambos lados. NO combinar con Azufre."}},
   {n:"Purín de Ortiga (insect)",dose:{nl:"320 ml per rugzak (15–30 ml/L). Niet in volle zon.",es:"320 ml por mochila (15–30 ml/L). No a pleno sol."},voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand, 2 wk ná Ficos/Cystium",es:"1× al mes, 2 sem tras Ficos/Cystium"},
@@ -441,7 +441,7 @@ function renderDoseringen(){
   ];
   zones.forEach(z=>h+=`<tr><td><b>${L(z.z)}</b></td><td>${L(z.o)}</td><td>${typeof z.r==="string"?z.r:L(z.r)}</td></tr>`);
   h+=`</table>`;
-  h+=`<h2 class="section">Cystium N — ${L({nl:"ml per rugzak (16 L)",es:"ml por mochila (16 L)"})}</h2>`;
+  h+=`<h2 class="section">Cystium K — ${L({nl:"ml per rugzak (16 L) · anti-stress",es:"ml por mochila (16 L) · anti-estrés"})}</h2>`;
   h+=`<table><tr><th>${L({nl:"Toepassing",es:"Aplicación"})}</th><th>${L({nl:"Normaal",es:"Normal"})}</th><th>${L({nl:"Extra boost",es:"Refuerzo"})}</th></tr>`;
   const dos=[
     {t:{nl:"Gras boven — 600 m², 2 rugzakken",es:"Césped arriba — 600 m², 2 mochilas"},n:{nl:"60 ml p/rugzak (120 ml totaal)",es:"60 ml p/mochila (120 ml total)"},s:{nl:"90 ml p/rugzak (180 ml totaal)",es:"90 ml p/mochila (180 ml total)"}},
@@ -457,21 +457,21 @@ function renderDoseringen(){
   const prod=[
     {p:"Ficosturf",d:"80 ml",f:{nl:"1×/1–2 mnd",es:"1×/1–2 meses"}},
     {p:"Ficosagro",d:{nl:"400 ml (gietbeurt)",es:"400 ml (riego)"},f:{nl:"1×/maand",es:"1×/mes"}},
-    {p:"Cystium-K",d:"40 ml",f:{nl:"1×/maand",es:"1×/mes"}},
-    {p:"Cystium N",d:{nl:"60–120 ml",es:"60–120 ml"},f:{nl:"alleen bij stress",es:"solo con estrés"}},
+    {p:"Cystium N",d:"40 ml",f:{nl:"1×/maand",es:"1×/mes"}},
+    {p:"Cystium K",d:{nl:"60–120 ml",es:"60–120 ml"},f:{nl:"alleen bij stress",es:"solo con estrés"}},
     {p:"Purín de Ortiga",d:"320 ml",f:{nl:"om 10–15 dgn, z.n.",es:"cada 10–15 días, s.n."}}
   ];
   prod.forEach(x=>h+=`<tr><td><b>${x.p}</b></td><td>${typeof x.d==="string"?x.d:L(x.d)}</td><td>${L(x.f)}</td></tr>`);
   h+=`</table>`;
   h+=`<p class="note">${L({nl:"Praktijkdoseringen voor Abrazzo. Officiële Ficosterra-doses staan per hectare (fertigatie); bij twijfel ensayos@ficosterra.com.",es:"Dosis prácticas para Abrazzo. Las oficiales de Ficosterra son por hectárea (fertirrigación); en caso de duda, ensayos@ficosterra.com."})}</p>`;
   h+=`<h2 class="section">${L({nl:"Mengbaarheid",es:"Mezclabilidad"})}</h2>`;
-  h+=`<div class="card grass"><div class="ttl">${L({nl:"Praktijk (Tuli)",es:"Práctica (Tuli)"})}</div><div class="body">${L({nl:"Kan samen: Ficosturf + Cystium-K · Ficosturf + Purín · Cystium-K + Purín. Apart: Ficosagro (levende microben), liefst enkele dagen vóór/na Purín.",es:"Pueden juntos: Ficosturf + Cystium-K · Ficosturf + Purín · Cystium-K + Purín. Aparte: Ficosagro (microbios vivos), mejor unos días antes/después del Purín."})}</div></div>`;
-  h+=`<div class="card alert"><div class="ttl">${L({nl:"Officieel (Ficosterra)",es:"Oficial (Ficosterra)"})}</div><div class="body">${L({nl:"Ficosturf: apart toepassen, NIET mengen met andere middelen/mest, chloorvrij water; na fungicide 7 dagen wachten. Cystium-K: niet mengen bij bouillon-pH > 10. Azufre: nooit met Purín. Praktijk en officieel verschillen over Ficosturf mengen — met Tuli afstemmen.",es:"Ficosturf: aplicar solo, NO mezclar con otros productos/abono, agua sin cloro; tras fungicida esperar 7 días. Cystium-K: no mezclar con caldo de pH > 10. Azufre: nunca con Purín. La práctica y lo oficial difieren sobre mezclar Ficosturf — consultar con Tuli."})}</div></div>`;
+  h+=`<div class="card grass"><div class="ttl">${L({nl:"Praktijk (Tuli)",es:"Práctica (Tuli)"})}</div><div class="body">${L({nl:"Tuli bevestigt (juni 2026): de vloeibare Fico-producten mógen samen gemengd worden — Ficosturf, Ficosagro en Cystium N kunnen in 1 rugzak. Purín kan mee met Ficosturf/Cystium N. Azufre: nooit met Purín.",es:"Tuli confirma (junio 2026): los productos Fico líquidos se pueden mezclar — Ficosturf, Ficosagro y Cystium N en una mochila. Purín puede ir con Ficosturf/Cystium N. Azufre: nunca con Purín."})}</div></div>`;
+  h+=`<div class="card alert"><div class="ttl">${L({nl:"Let op op het etiket",es:"Atención en la etiqueta"})}</div><div class="body">${L({nl:"Officieel schrijft Ficosterra chloorvrij water voor en na een fungicide 7 dagen wachten. Tuli's praktijk gaat vóór op deze schema's; twijfel je over een nieuwe combinatie, check even bij haar.",es:"Oficialmente Ficosterra pide agua sin cloro y esperar 7 días tras un fungicida. La práctica de Tuli prevalece en este esquema; ante una combinación nueva, consúltala."})}</div></div>`;
   h+=`<h2 class="section">${L({nl:"Per toepassing (Abrazzo)",es:"Por aplicación (Abrazzo)"})}</h2>`;
   h+=`<table><tr><th>${L({nl:"Waar",es:"Dónde"})}</th><th>${L({nl:"Product · per rugzak",es:"Producto · por mochila"})}</th></tr>`;
   const toep=[
     {w:{nl:"Gras (600 m²)",es:"Césped (600 m²)"},x:{nl:"Ficosturf 80 ml (+ evt. Purín 320 ml)",es:"Ficosturf 80 ml (+ opc. Purín 320 ml)"}},
-    {w:{nl:"Bomen, citrus, olijf, moestuin",es:"Árboles, cítricos, olivo, huerto"},x:{nl:"Cystium-K 40 ml + Purín 320 ml",es:"Cystium-K 40 ml + Purín 320 ml"}},
+    {w:{nl:"Bomen, citrus, olijf, moestuin",es:"Árboles, cítricos, olivo, huerto"},x:{nl:"Cystium N 40 ml + Purín 320 ml",es:"Cystium N 40 ml + Purín 320 ml"}},
     {w:{nl:"Bodemverbetering",es:"Mejora del suelo"},x:{nl:"Ficosagro 400 ml als gietbeurt",es:"Ficosagro 400 ml en riego"}}
   ];
   toep.forEach(t=>h+=`<tr><td><b>${L(t.w)}</b></td><td>${L(t.x)}</td></tr>`);
