@@ -143,9 +143,9 @@ const SEASONS={
 
 /* reusable task blocks */
 const grasCombo={cat:"grass",
-  ttl:{nl:"Gras: Ficosturf + Ficosagro",es:"Césped: Ficosturf + Ficosagro"},
-  body:{nl:"Samen in 1 rugzak. Versterkt het gazon, maakt het groener en activeert het bodemleven.",
-        es:"Juntos en una mochila. Fortalece el césped, lo hace más verde y activa el suelo."},
+  ttl:{nl:"Gras: Cystium N + Ficosturf + Ficosagro",es:"Césped: Cystium N + Ficosturf + Ficosagro"},
+  body:{nl:"Samen in 1 rugzak. Cystium N = voeding, ondersteunt de groei. Ficosturf versterkt het gazon en maakt het groener, Ficosagro activeert het bodemleven.",
+        es:"Juntos en una mochila. Cystium N = nutrición, estimula el crecimiento. Ficosturf fortalece y reverdece el césped, Ficosagro activa el suelo."},
   when:{nl:"Week 1 van de maand",es:"Semana 1 del mes"},
   meta:{nl:"Op de bodem · licht water vooraf, 1–2 u erna",es:"Sobre el suelo · riego ligero antes, 1–2 h después"}};
 const plantCombo={cat:"plant",
@@ -306,8 +306,8 @@ const PRODUCTEN=[
    d:{nl:"Met Ficosagro in 1 rugzak. Versterkt het gazon en maakt het groener. Op de bodem, licht water vooraf en 1–2 u erna.",es:"Con Ficosagro en una mochila. Fortalece y reverdece el césped. Sobre suelo, riego ligero antes y 1–2 h después."}},
   {n:"Ficosagro",dose:{nl:"400 ml per rugzak (≈26 ml/L) als gietbeurt rond de wortels. Apart — levende microben.",es:"400 ml por mochila (≈26 ml/L) en riego a la raíz. Aparte — microbios vivos."},voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand",es:"1× al mes"},
    d:{nl:"Activeert het bodemleven. Combineer met Ficosturf (gras) of Cystium N (planten).",es:"Activa el suelo. Combina con Ficosturf (césped) o Cystium N (plantas)."}},
-  {n:"Cystium N",dose:{nl:"40 ml per rugzak (2–3,5 ml/L).",es:"40 ml por mochila (2–3,5 ml/L)."},voor:{nl:"Buitenplanten, citrus, struiken",es:"Plantas, cítricos, arbustos"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand",es:"1× al mes"},
-   d:{nl:"N = voeding. Met Ficosagro in 1 rugzak. Ondersteunt bloei en groei. Op het blad, licht water vooraf, 1 u erna.",es:"N = nutrición. Con Ficosagro en una mochila. Estimula flor y crecimiento. Sobre hoja, riego ligero antes, 1 h después."}},
+  {n:"Cystium N",dose:{nl:"40 ml per rugzak (2–3,5 ml/L).",es:"40 ml por mochila (2–3,5 ml/L)."},voor:{nl:"Gras + buitenplanten, citrus, struiken",es:"Césped + plantas, cítricos, arbustos"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand",es:"1× al mes"},
+   d:{nl:"N = voeding. Bij gras samen met Ficosturf + Ficosagro; bij planten met Ficosagro in 1 rugzak. Ondersteunt bloei en groei.",es:"N = nutrición. En césped con Ficosturf + Ficosagro; en plantas con Ficosagro en una mochila. Estimula flor y crecimiento."}},
   {n:"Cystium K",dose:{nl:"Gras boven 60 ml/rugzak (2×); zwembad 120 ml; planten 25–40 ml. Zie Doseringen-tab.",es:"Césped arriba 60 ml/mochila (2×); piscina 120 ml; plantas 25–40 ml. Ver pestaña Dosis."},voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Alleen indien nodig",es:"Solo si es necesario"},freq:{nl:"Afhankelijk van situatie",es:"Según situación"},
    d:{nl:"K = anti-stress. ALLEEN bij extreme hitte, droogte, na snoei/verplanten of stress. Herstel. Goed schudden vóór gebruik. Ruim water vooraf en erna. Dosering gras: normaal 100 ml / 16 L (zona privado 2 tanks voor 700 m²); superstress 150 ml / 16 L. Planten: normaal 25–30 ml / 16 L, superstress 40 ml / 16 L.",es:"K = anti-estrés. SOLO con calor extremo, sequía, tras poda/trasplante o estrés. Recuperación. Agitar bien antes. Riego antes y después. Dosis césped: normal 100 ml / 16 L (zona privado 2 tanks para 700 m²); súper estrés 150 ml / 16 L. Plantas: normal 25–30 ml / 16 L, súper estrés 40 ml / 16 L."}},
   {n:"Purín de Ortiga (schimmel)",dose:{nl:"320 ml per rugzak (15–30 ml/L). Niet in volle zon.",es:"320 ml por mochila (15–30 ml/L). No a pleno sol."},voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand, 2 wk ná Ficos/Cystium",es:"1× al mes, 2 sem tras Ficos/Cystium"},
@@ -470,7 +470,7 @@ function renderDoseringen(){
   h+=`<h2 class="section">${L({nl:"Per toepassing (Abrazzo)",es:"Por aplicación (Abrazzo)"})}</h2>`;
   h+=`<table><tr><th>${L({nl:"Waar",es:"Dónde"})}</th><th>${L({nl:"Product · per rugzak",es:"Producto · por mochila"})}</th></tr>`;
   const toep=[
-    {w:{nl:"Gras (600 m²)",es:"Césped (600 m²)"},x:{nl:"Ficosturf 80 ml (+ evt. Purín 320 ml)",es:"Ficosturf 80 ml (+ opc. Purín 320 ml)"}},
+    {w:{nl:"Gras (600 m²)",es:"Césped (600 m²)"},x:{nl:"Cystium N 40 ml + Ficosturf 80 ml + Ficosagro 400 ml (+ evt. Purín 320 ml)",es:"Cystium N 40 ml + Ficosturf 80 ml + Ficosagro 400 ml (+ opc. Purín 320 ml)"}},
     {w:{nl:"Bomen, citrus, olijf, moestuin",es:"Árboles, cítricos, olivo, huerto"},x:{nl:"Cystium N 40 ml + Purín 320 ml",es:"Cystium N 40 ml + Purín 320 ml"}},
     {w:{nl:"Bodemverbetering",es:"Mejora del suelo"},x:{nl:"Ficosagro 400 ml als gietbeurt",es:"Ficosagro 400 ml en riego"}}
   ];
