@@ -89,6 +89,56 @@
   .empty{text-align:center;color:var(--muted);padding:30px 10px;font-style:italic}
   footer{text-align:center;font-size:.74rem;color:var(--muted);padding:20px 14px}
   @media(max-width:420px){header h1{font-size:1.15rem}.now-banner .big{font-size:1.25rem}}
+  .small-note{font-size:.72rem;color:var(--muted);margin-top:2px;line-height:1.3}
+  .field{margin-bottom:11px}
+  .field label{display:block;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;
+    color:var(--olive-d);margin-bottom:4px}
+  .field select,.field input,.field textarea{width:100%;font-family:inherit;font-size:.9rem;color:var(--ink);
+    background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px 11px;-webkit-appearance:none;appearance:none}
+  .field select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path d='M1 1l5 5 5-5' stroke='%236f6a5d' stroke-width='2' fill='none'/></svg>");
+    background-repeat:no-repeat;background-position:right 12px center}
+  .field textarea{min-height:70px;resize:vertical}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--olive);outline-offset:-1px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:420px){.row2{grid-template-columns:1fr}}
+  .btn{background:var(--olive);color:var(--sand);border:none;border-radius:10px;padding:12px 18px;
+    font-size:.92rem;font-weight:700;cursor:pointer;font-family:inherit;width:100%}
+  .btn:active{background:var(--olive-d)}
+  .btn.sec{background:transparent;color:var(--olive-d);border:1px solid var(--line);font-weight:600}
+  .btn.warn{background:var(--terra)}
+  .btnrow{display:flex;gap:8px;margin-top:6px}
+  .btnrow .btn{width:auto;flex:1}
+  .calc{background:var(--sand-d);border-radius:9px;padding:10px 12px;font-size:.85rem;margin-top:-4px;margin-bottom:11px}
+  .calc b{color:var(--olive-d)}
+  .calc .hint{font-size:.76rem;color:var(--muted);margin-top:3px}
+  .logitem{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--leaf);
+    border-radius:10px;padding:11px 13px;margin-bottom:9px}
+  .logitem .lh{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+  .logitem .ld{font-size:.76rem;color:var(--muted);white-space:nowrap}
+  .logitem .lw{font-weight:700;font-size:.94rem}
+  .logitem .lz{font-size:.8rem;color:var(--olive-d);margin-top:2px}
+  .logitem .lq{font-size:.82rem;margin-top:4px}
+  .logitem .ln{font-size:.85rem;margin-top:6px;padding-top:6px;border-top:1px dashed var(--line);color:var(--ink)}
+  .logitem .lby{font-size:.72rem;color:var(--muted);margin-top:5px}
+  .logitem.obs{border-left-color:var(--gold)}
+  .logitem.pending{opacity:.75;border-style:dashed}
+  .status{display:flex;align-items:center;gap:7px;font-size:.78rem;color:var(--muted);margin-bottom:12px}
+  .dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+  .dot.on{background:var(--leaf)} .dot.off{background:var(--gold)} .dot.err{background:#c0392b}
+  .due{display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:10px 12px;margin-bottom:8px}
+  .due .bar{width:5px;align-self:stretch;border-radius:3px;flex:0 0 auto}
+  .due .dt{flex:1;min-width:0}
+  .due .dn{font-weight:700;font-size:.88rem}
+  .due .dd{font-size:.78rem;color:var(--muted);margin-top:1px}
+  .due .dv{font-size:.78rem;font-weight:700;white-space:nowrap;padding:3px 9px;border-radius:10px}
+  .ok{background:#e7f0e0;color:#40632a} .soon{background:#fbf0d8;color:#8a6a1c} .late{background:#fbe6e1;color:#a33a22}
+  .never{background:var(--sand-d);color:var(--muted)}
+  .taskdone{display:flex;align-items:center;gap:8px;margin-top:9px;padding-top:9px;border-top:1px dashed var(--line)}
+  .taskdone button{background:transparent;border:1px solid var(--line);border-radius:8px;padding:6px 12px;
+    font-size:.8rem;font-weight:600;font-family:inherit;color:var(--olive-d);cursor:pointer}
+  .taskdone button.done{background:#e7f0e0;border-color:#a8c493;color:#40632a}
+  .taskdone .dinfo{font-size:.76rem;color:var(--muted)}
   .dbody .pimg{display:block;width:100%;max-width:230px;height:auto;border-radius:8px;margin:2px 0 10px;border:1px solid var(--line)}
 </style>
 </head>
@@ -114,6 +164,7 @@
   <div id="v-problemen" class="view"></div>
   <div id="v-producten" class="view"></div>
   <div id="v-doseringen" class="view"></div>
+  <div id="v-logboek" class="view"></div>
 </main>
 <footer>
   <span data-i="footer">Gebaseerd op het verzorgingsschema van Tuli · Abrazzo, Sant Andreu de Llavaneres</span>
@@ -123,7 +174,7 @@
 /* ============ DATA ============ */
 const T = {
   nav:{nu:{nl:"Nu",es:"Ahora"},maand:{nl:"Per maand",es:"Por mes"},seizoen:{nl:"Per seizoen",es:"Por temporada"},
-    snoei:{nl:"Snoei",es:"Poda"},problemen:{nl:"Plantproblemen",es:"Problemas"},producten:{nl:"Producten",es:"Productos"},doseringen:{nl:"Doseringen",es:"Dosis"}},
+    snoei:{nl:"Snoei",es:"Poda"},problemen:{nl:"Plantproblemen",es:"Problemas"},producten:{nl:"Producten",es:"Productos"},doseringen:{nl:"Doseringen",es:"Dosis"},logboek:{nl:"Logboek",es:"Registro"}},
   subtitle:{nl:"Wat te doen — per week, maand en seizoen",es:"Qué hacer — por semana, mes y temporada"},
   footer:{nl:"Gebaseerd op het verzorgingsschema van Tuli · Abrazzo, Sant Andreu de Llavaneres",
     es:"Basado en el esquema de cuidado de Tuli · Abrazzo, Sant Andreu de Llavaneres"},
@@ -142,25 +193,25 @@ const SEASONS={
   herfst:{m:[8,9,10],nl:"Herfst",es:"Otoño"}};
 
 /* reusable task blocks */
-const grasCombo={cat:"grass",
+const grasCombo={cat:"grass",id:"gras_combo",vink:1,
   ttl:{nl:"Gras: Cystium N + Ficosturf + Ficosagro",es:"Césped: Cystium N + Ficosturf + Ficosagro"},
   body:{nl:"Samen in 1 rugzak. Cystium N = voeding, ondersteunt de groei. Ficosturf versterkt het gazon en maakt het groener, Ficosagro activeert het bodemleven.",
         es:"Juntos en una mochila. Cystium N = nutrición, estimula el crecimiento. Ficosturf fortalece y reverdece el césped, Ficosagro activa el suelo."},
   when:{nl:"Week 1 van de maand",es:"Semana 1 del mes"},
   meta:{nl:"Op de bodem · licht water vooraf, 1–2 u erna",es:"Sobre el suelo · riego ligero antes, 1–2 h después"}};
-const plantCombo={cat:"plant",
+const plantCombo={cat:"plant",id:"plant_combo",vink:1,
   ttl:{nl:"Planten: Cystium N + Ficosagro",es:"Plantas: Cystium N + Ficosagro"},
   body:{nl:"Samen in 1 rugzak. Voor buitenplanten incl. citrus en struiken — Cystium N = voeding, ondersteunt bloei en groei. Vloeibare Fico-producten mogen samen gemengd worden.",
         es:"Juntos en una mochila. Plantas exteriores incl. cítricos y arbustos — Cystium N = nutrición, estimula flor y crecimiento. Los productos Fico líquidos se pueden mezclar."},
   when:{nl:"Week 1 van de maand",es:"Semana 1 del mes"},
   meta:{nl:"Op het blad · licht water vooraf, 1 u erna",es:"Sobre la hoja · riego ligero antes, 1 h después"}};
-const purin={cat:"plant",
+const purin={cat:"plant",id:"purin",vink:1,
   ttl:{nl:"Purín de Ortiga — schimmel + insect",es:"Purín de Ortiga — hongo + insecto"},
   body:{nl:"Gras én planten. Preventief tegen schimmel- en insectendruk. Versterkt de natuurlijke weerstand.",
         es:"Césped y plantas. Preventivo contra hongos e insectos. Refuerza la resistencia natural."},
   when:{nl:"Week 3 — 2 weken ná Ficos/Cystium",es:"Semana 3 — 2 semanas tras Ficos/Cystium"},
   meta:{nl:"Blad beide zijden · ⚠ nooit samen met Azufre",es:"Hoja por ambos lados · ⚠ nunca junto con Azufre"}};
-const mest=(n)=>({cat:"mest",
+const mest=(n)=>({cat:"mest",id:"mest_"+n,vink:1,
   ttl:{nl:"Organische bemesting ("+n+"/3)",es:"Abono orgánico ("+n+"/3)"},
   body:{nl:"Gras: Batlle césped (8-4-6). Planten/bomen: Batlle universal (6-4-6). Korrels licht door de aarde.",
         es:"Césped: Batlle césped (8-4-6). Plantas/árboles: Batlle universal (6-4-6). Bolitas ligeras en la tierra."},
@@ -312,18 +363,20 @@ const PIMG=[
 "data:image/jpeg;base64,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"
 ];
 const PRODUCTEN=[
-  {n:"Ficosturf",dose:{nl:"80 ml per rugzak (5 ml/L). Officieel: apart toepassen, chloorvrij water, niet mengen.",es:"80 ml por mochila (5 ml/L). Oficial: aplicar solo, agua sin cloro, sin mezclar."},voor:{nl:"Gras",es:"Césped"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand",es:"1× al mes"},
-   d:{nl:"Met Ficosagro in 1 rugzak. Versterkt het gazon en maakt het groener. Op de bodem, licht water vooraf en 1–2 u erna.",es:"Con Ficosagro en una mochila. Fortalece y reverdece el césped. Sobre suelo, riego ligero antes y 1–2 h después."}},
-  {n:"Ficosagro",dose:{nl:"400 ml per rugzak (≈26 ml/L) als gietbeurt rond de wortels. Apart — levende microben.",es:"400 ml por mochila (≈26 ml/L) en riego a la raíz. Aparte — microbios vivos."},voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand",es:"1× al mes"},
-   d:{nl:"Activeert het bodemleven. Combineer met Ficosturf (gras) of Cystium N (planten).",es:"Activa el suelo. Combina con Ficosturf (césped) o Cystium N (plantas)."}},
-  {n:"Cystium N",dose:{nl:"40 ml per rugzak (2–3,5 ml/L).",es:"40 ml por mochila (2–3,5 ml/L)."},voor:{nl:"Gras + buitenplanten, citrus, struiken",es:"Césped + plantas, cítricos, arbustos"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand",es:"1× al mes"},
-   d:{nl:"N = voeding. Bij gras samen met Ficosturf + Ficosagro; bij planten met Ficosagro in 1 rugzak. Ondersteunt bloei en groei.",es:"N = nutrición. En césped con Ficosturf + Ficosagro; en plantas con Ficosagro en una mochila. Estimula flor y crecimiento."}},
-  {n:"Cystium K",dose:{nl:"Gras boven 60 ml/rugzak (2×); zwembad 120 ml; planten 25–40 ml. Zie Doseringen-tab.",es:"Césped arriba 60 ml/mochila (2×); piscina 120 ml; plantas 25–40 ml. Ver pestaña Dosis."},voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Alleen indien nodig",es:"Solo si es necesario"},freq:{nl:"Afhankelijk van situatie",es:"Según situación"},
-   d:{nl:"K = anti-stress. ALLEEN bij extreme hitte, droogte, na snoei/verplanten of stress. Herstel. Goed schudden vóór gebruik. Ruim water vooraf en erna. Dosering gras: normaal 100 ml / 16 L (zona privado 2 tanks voor 700 m²); superstress 150 ml / 16 L. Planten: normaal 25–30 ml / 16 L, superstress 40 ml / 16 L.",es:"K = anti-estrés. SOLO con calor extremo, sequía, tras poda/trasplante o estrés. Recuperación. Agitar bien antes. Riego antes y después. Dosis césped: normal 100 ml / 16 L (zona privado 2 tanks para 700 m²); súper estrés 150 ml / 16 L. Plantas: normal 25–30 ml / 16 L, súper estrés 40 ml / 16 L."}},
-  {n:"Purín de Ortiga (schimmel)",dose:{nl:"320 ml per rugzak (15–30 ml/L). Niet in volle zon.",es:"320 ml por mochila (15–30 ml/L). No a pleno sol."},voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand, 2 wk ná Ficos/Cystium",es:"1× al mes, 2 sem tras Ficos/Cystium"},
+  {n:"Ficosturf",dose:{nl:"40 ml per rugzak (2,5 ml/L) — gras boven 4 rugzakken = 160 ml, zwembad 2 rugzakken = 80 ml.",es:"40 ml por mochila (2,5 ml/L) — césped arriba 4 mochilas = 160 ml, piscina 2 mochilas = 80 ml."},voor:{nl:"Gras",es:"Césped"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand",es:"1× al mes"},
+   d:{nl:"Met Ficosagro in 1 rugzak. Versterkt het gazon en maakt het groener. Op de bodem, licht water vooraf en 1–2 u erna. Dosering is per oppervlak: meer rugzakken betekent meer water, niet meer product.",es:"Con Ficosagro en una mochila. Fortalece y reverdece el césped. Sobre suelo, riego ligero antes y 1–2 h después. La dosis es por superficie: más mochilas significa más agua, no más producto."}},
+  {n:"Ficosagro",dose:{nl:"Gras: 200 ml per rugzak (12,5 ml/L) — boven 4 rugzakken = 800 ml, zwembad 2 rugzakken = 400 ml. Losse planten en nieuwe aanplant: etiketsterkte 250 ml op 3 L water, gericht aan de wortel.",es:"Césped: 200 ml por mochila (12,5 ml/L) — arriba 4 mochilas = 800 ml, piscina 2 mochilas = 400 ml. Plantas sueltas y plantación nueva: dosis de etiqueta 250 ml en 3 L de agua, a la raíz."},voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand",es:"1× al mes"},bewaar:{nl:"Na openen binnen 3 maanden opmaken",es:"Una vez abierto, consumir en 3 meses"},
+   d:{nl:"Activeert het bodemleven. Combineer met Ficosturf (gras) of Cystium N (planten). Etiket: 1× per maand, vooral ná zaaien of verplanten, en het effect is sterker wanneer je het ná de bemesting geeft — dus in maart, juni en september eerst de Batlle-korrels, daarna pas Ficosagro. Overdosering schaadt de plant niet.",es:"Activa el suelo. Combina con Ficosturf (césped) o Cystium N (plantas). Etiqueta: 1× al mes, sobre todo tras la siembra o el trasplante, y el efecto es mayor aplicado tras el abonado — en marzo, junio y septiembre primero las bolitas Batlle, después Ficosagro. La sobredosis no daña la planta."}},
+  {n:"Cystium N",dose:{nl:"Gras: 20 ml per rugzak (1,25 ml/L) — boven 4 rugzakken = 80 ml, zwembad 2 rugzakken = 40 ml. Planten: 40 ml per rugzak.",es:"Césped: 20 ml por mochila (1,25 ml/L) — arriba 4 mochilas = 80 ml, piscina 2 mochilas = 40 ml. Plantas: 40 ml por mochila."},voor:{nl:"Gras + buitenplanten, citrus, struiken",es:"Césped + plantas, cítricos, arbustos"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand",es:"1× al mes"},
+   d:{nl:"N = voeding. Bij gras samen met Ficosturf + Ficosagro; bij planten met Ficosagro in 1 rugzak. Ondersteunt bloei en groei. Let op: stikstof — bij gras niet ruimer doseren dan hierboven, zeker niet in de zomer.",es:"N = nutrición. En césped con Ficosturf + Ficosagro; en plantas con Ficosagro en una mochila. Estimula flor y crecimiento. Atención: es nitrógeno — en césped no superar la dosis indicada, menos aún en verano."}},
+  {n:"Cystium K",dose:{nl:"Gras boven 45 ml/rugzak (4× = 180 ml); gras zwembad 35 ml/rugzak (2× = 69 ml); planten 30 ml. Bij zware stress naar 55 resp. 40 ml — dat is de fiche-max.",es:"Césped arriba 45 ml/mochila (4× = 180 ml); césped piscina 35 ml/mochila (2× = 69 ml); plantas 30 ml. Con estrés fuerte 55 resp. 40 ml — es el máximo de la ficha."},voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Groeiseizoen; extra bij stress",es:"Temporada de crecimiento; extra con estrés"},freq:{nl:"Afhankelijk van situatie",es:"Según situación"},bewaar:{nl:"Ongeopend 2 jaar · na openen binnen 9 maanden opmaken",es:"Cerrado 2 años · abierto, consumir en 9 meses"},
+   d:{nl:"Bioestimulant uit zeewier (Macrocystis pyrifera), werkt via fytohormonen. Etiketdosis: 2–3 L per hectare per toepassing. Omgerekend naar Abrazzo is dat 45 ml per rugzak boven en 35 ml beneden; bij zware stress 55 resp. 40 ml, en niet hoger — het etiket kent geen superstress-dosis. Goed schudden vóór gebruik, ruim water vooraf en erna. Let op: dit is géén kaliumbemesting (N 0,1% · P 0,0% · K 1,3%) — een kaliumtekort in de bodem los je hier niet mee op. Naast stressherstel ook goed voor wortelbeharing, bladmassa en fotosynthese, dus breder inzetbaar dan alleen als noodmiddel.",es:"Bioestimulante de alga (Macrocystis pyrifera), actúa por fitohormonas. Dosis de etiqueta: 2–3 L por hectárea y aplicación. En Abrazzo son 45 ml por mochila arriba y 35 ml abajo; con estrés fuerte 55 resp. 40 ml, no más — la etiqueta no contempla dosis de súper estrés. Agitar bien antes, riego abundante antes y después. Atención: no es un abono de potasio (N 0,1% · P 0,0% · K 1,3%) — no corrige una carencia de potasio en el suelo. Además de recuperar del estrés, favorece la pilosidad radicular, la masa foliar y la fotosíntesis, así que es más versátil que un simple remedio de emergencia."}},
+  {n:"Purín de Ortiga (schimmel)",dose:{nl:"240 ml per rugzak (15 ml/L). Niet in volle zon.",es:"240 ml por mochila (15 ml/L). No a pleno sol."},voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand, 2 wk ná Ficos/Cystium",es:"1× al mes, 2 sem tras Ficos/Cystium"},
    d:{nl:"Preventief tegen schimmeldruk. Blad beide zijden. NIET combineren met Azufre.",es:"Preventivo contra hongos. Hoja por ambos lados. NO combinar con Azufre."}},
-  {n:"Purín de Ortiga (insect)",dose:{nl:"320 ml per rugzak (15–30 ml/L). Niet in volle zon.",es:"320 ml por mochila (15–30 ml/L). No a pleno sol."},voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand, 2 wk ná Ficos/Cystium",es:"1× al mes, 2 sem tras Ficos/Cystium"},
+  {n:"Purín de Ortiga (insect)",dose:{nl:"240 ml per rugzak (15 ml/L). Niet in volle zon.",es:"240 ml por mochila (15 ml/L). No a pleno sol."},voor:{nl:"Gras + planten",es:"Césped + plantas"},per:{nl:"Maart–eind oktober",es:"Marzo–fin octubre"},freq:{nl:"1× per maand, 2 wk ná Ficos/Cystium",es:"1× al mes, 2 sem tras Ficos/Cystium"},
    d:{nl:"Natuurlijke weerstand, vermindert insectendruk. Blad beide zijden.",es:"Resistencia natural, reduce insectos. Hoja por ambos lados."}},
+  {n:"HydraGuard",dose:{nl:"80 ml per rugzak (0,5%) — gras boven 4 rugzakken = 320 ml, zwembad 2 rugzakken = 160 ml. Volledige ronde 480 ml.",es:"80 ml por mochila (0,5%) — césped arriba 4 mochilas = 320 ml, piscina 2 mochilas = 160 ml. Ronda completa 480 ml."},voor:{nl:"Gras",es:"Césped"},per:{nl:"Droge periode / zomer",es:"Periodo seco / verano"},freq:{nl:"Nog vast te leggen",es:"Aún por definir"},
+   d:{nl:"Houdt vocht vast in de wortelzone en gaat tegen dat de bodem waterafstotend wordt — in Llavaneres speelt dat in de zomer. Water geven vóór én ná het sproeien: vooraf zodat het product niet op een kurkdroge toplaag blijft liggen, erna om het de wortelzone in te spoelen. Zonder nabewateren werkt het niet.",es:"Retiene la humedad en la zona radicular y evita que el suelo se vuelva hidrófobo — en Llavaneres pasa en verano. Regar antes y después de pulverizar: antes para que el producto no se quede en una capa reseca, después para llevarlo a la zona de raíces. Sin riego posterior no funciona."}},
   {n:"Batlle abono ecológico césped",voor:{nl:"Gras",es:"Césped"},per:{nl:"Maart, juni, september",es:"Marzo, junio, septiembre"},freq:{nl:"3× per jaar",es:"3× al año"},
    d:{nl:"Organische gazonmest (N-P-K 8-4-6). Buiten de hitte en winter. Licht water vooraf en erna.",es:"Abono orgánico césped (8-4-6). Fuera del calor y del invierno. Riego antes y después."}},
   {n:"Batlle abono universal",voor:{nl:"Planten, citrus, struiken, bomen",es:"Plantas, cítricos, arbustos, árboles"},per:{nl:"Maart, juni, september",es:"Marzo, junio, septiembre"},freq:{nl:"3× per jaar",es:"3× al año"},
@@ -337,6 +390,175 @@ const PRODUCTEN=[
   {n:"Compo Agrosil",voor:{nl:"Gras, planten, bomen, struiken",es:"Césped, plantas, árboles, arbustos"},per:{nl:"Alleen bij nieuwe aanplant",es:"Solo en plantación nueva"},freq:{nl:"Incidenteel",es:"Puntual"},
    d:{nl:"Wortelstimulant, niet 100% biologisch. Voegt weinig toe aan de Ficosterra-producten — niet mengen met de vaste maandproducten.",es:"Estimulante de raíz, no 100% biológico. Aporta poco a los productos Ficosterra — no mezclar con los fijos mensuales."}}
 ];
+
+/* ============ ZONES, DOSERINGEN, LOGBOEK ============ */
+const ZONES=[
+  {id:"gras_boven",  nl:"Gras boven (bij huis)", es:"Césped arriba (casa)",      m2:720, rz:4, type:"gras"},
+  {id:"gras_zwembad",nl:"Gras bij zwembad",      es:"Césped piscina",            m2:275, rz:2, type:"gras"},
+  {id:"planten",     nl:"Planten & struiken",    es:"Plantas y arbustos",        rz:1,   type:"plant"},
+  {id:"citrus",      nl:"Citrus, olijf & bomen", es:"Cítricos, olivo y árboles", rz:1,   type:"plant"},
+  {id:"moestuin",    nl:"Moestuin",              es:"Huerto",                    rz:1,   type:"plant"},
+  {id:"heletuin",    nl:"Hele tuin / overig",    es:"Todo el jardín / otros",    rz:1,   type:"plant"}
+];
+function zoneById(id){return ZONES.find(z=>z.id==id)||ZONES[0]}
+
+const DOSISTABEL=[
+  {n:"Ficosturf",       boven:40, beneden:40, plant:null, note:{nl:"bodem · per m²",es:"suelo · por m²"}},
+  {n:"Ficosagro",       boven:200,beneden:200,plant:200,  note:{nl:"bodem · per m²",es:"suelo · por m²"}},
+  {n:"Cystium N",       boven:20, beneden:20, plant:40,   note:{nl:"bodem · per m² · stikstof",es:"suelo · por m² · nitrógeno"}},
+  {n:"Cystium K",       boven:45, beneden:35, plant:30,   note:{nl:"bodem · 2–3 L/ha volgens etiket",es:"suelo · 2–3 L/ha según etiqueta"}},
+  {n:"Purín de Ortiga", boven:240,beneden:240,plant:240,  note:{nl:"blad · concentratie 15 ml/L",es:"hoja · concentración 15 ml/L"}},
+  {n:"HydraGuard",      boven:80, beneden:80, plant:null, note:{nl:"concentratie 0,5% · water vóór én ná",es:"concentración 0,5% · riego antes y después"}}
+];
+
+/* wat kun je noteren */
+const LOGWAT=[
+  {g:{nl:"Producten (rugzak)",es:"Productos (mochila)"},items:[
+    {v:"Ficosturf",nl:"Ficosturf",es:"Ficosturf",calc:1},
+    {v:"Ficosagro",nl:"Ficosagro",es:"Ficosagro",calc:1},
+    {v:"Cystium N",nl:"Cystium N",es:"Cystium N",calc:1},
+    {v:"Cystium K",nl:"Cystium K",es:"Cystium K",calc:1},
+    {v:"Purín de Ortiga",nl:"Purín de Ortiga",es:"Purín de Ortiga",calc:1},
+    {v:"HydraGuard",nl:"HydraGuard",es:"HydraGuard",calc:1},
+    {v:"Combi gras",nl:"Combi gras (Cystium N + Ficosturf + Ficosagro)",es:"Combi césped (Cystium N + Ficosturf + Ficosagro)",calc:1,combi:["Cystium N","Ficosturf","Ficosagro"]},
+    {v:"Combi planten",nl:"Combi planten (Cystium N + Ficosagro)",es:"Combi plantas (Cystium N + Ficosagro)",calc:1,combi:["Cystium N","Ficosagro"]}
+  ]},
+  {g:{nl:"Overige middelen",es:"Otros productos"},items:[
+    {v:"Batlle césped",nl:"Batlle abono césped (korrels)",es:"Batlle abono césped (bolitas)"},
+    {v:"Batlle universal",nl:"Batlle abono universal (korrels)",es:"Batlle abono universal (bolitas)"},
+    {v:"Azufre",nl:"Azufre",es:"Azufre"},
+    {v:"Ferrare Evo",nl:"Ferrare Evo (ijzer)",es:"Ferrare Evo (hierro)"},
+    {v:"Schneckenkorn",nl:"Schneckenkorn (slakken)",es:"Schneckenkorn (caracoles)"},
+    {v:"Compo Agrosil",nl:"Compo Agrosil",es:"Compo Agrosil"}
+  ]},
+  {g:{nl:"Werkzaamheden",es:"Trabajos"},items:[
+    {v:"Maaien",nl:"Maaien",es:"Cortar el césped"},
+    {v:"Beregening",nl:"Beregening / extra water",es:"Riego / agua extra"},
+    {v:"Snoeien",nl:"Snoeien",es:"Podar"},
+    {v:"Verticuteren",nl:"Verticuteren / beluchten",es:"Escarificar / airear"},
+    {v:"Onkruid",nl:"Onkruid",es:"Malas hierbas"},
+    {v:"Planten",nl:"Planten / zaaien",es:"Plantar / sembrar"},
+    {v:"Overig werk",nl:"Overig werk",es:"Otro trabajo"}
+  ]},
+  {g:{nl:"Zonder handeling",es:"Sin intervención"},items:[
+    {v:"Observatie",nl:"Observatie / notitie",es:"Observación / nota",obs:1}
+  ]}
+];
+function watById(v){for(const g of LOGWAT){const i=g.items.find(x=>x.v==v);if(i)return i}return null}
+
+/* dosering uitrekenen voor product + zone */
+function berekenDosis(product,zoneId){
+  const z=zoneById(zoneId), it=watById(product);
+  if(!it||!it.calc)return null;
+  const namen=it.combi||[product];
+  const regels=[];
+  namen.forEach(n=>{
+    const d=DOSISTABEL.find(x=>x.n==n); if(!d)return;
+    let ml=null;
+    if(z.type=="gras") ml = (z.id=="gras_boven")?d.boven:d.beneden;
+    else ml = d.plant;
+    if(ml==null){regels.push({n:n,ml:null});return}
+    regels.push({n:n,ml:ml,tot:ml*z.rz});
+  });
+  return {zone:z,rz:z.rz,liter:z.rz*16,regels:regels};
+}
+function dosisTekst(product,zoneId){
+  const c=berekenDosis(product,zoneId); if(!c)return "";
+  return c.regels.filter(r=>r.ml!=null).map(r=>r.n+" "+r.tot+" ml").join(" + ")+" ("+c.rz+"×16 L)";
+}
+
+/* ---------- opslag ---------- */
+const LSKEY="abrazzo_tuin_log_v2", LSWIE="abrazzo_tuin_wie";
+let LOG=[], REMOTE=[], syncState={mode:"local",msg:""};
+function loadLog(){try{LOG=JSON.parse(localStorage.getItem(LSKEY)||"[]")}catch(e){LOG=[]}}
+function saveLog(){try{localStorage.setItem(LSKEY,JSON.stringify(LOG))}catch(e){}}
+function getWie(){try{return localStorage.getItem(LSWIE)||""}catch(e){return ""}}
+function setWie(w){try{localStorage.setItem(LSWIE,w)}catch(e){}}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+
+/* alle regels, eigen + gedeeld, ontdubbeld op id */
+function alleRegels(){
+  const map=new Map();
+  REMOTE.forEach(r=>map.set(r.id,r));
+  LOG.forEach(r=>map.set(r.id,Object.assign({},map.get(r.id)||{},r)));
+  return Array.from(map.values()).sort((a,b)=>(b.datum+b.id).localeCompare(a.datum+a.id));
+}
+
+/* ---------- synchronisatie ---------- */
+/* Vul deze twee in zodra de Google Sheet en het formulier klaarstaan.
+   Zonder deze waarden werkt de app volledig, maar blijft alles op dit apparaat. */
+const SYNC={
+  apiUrl:"https://script.google.com/macros/s/AKfycbzh3CWpvxeh6gfIez3nsVGEj0Hj2rVCfLersZUu8002Xd9JeGw2sV79ThX9ELEguMn2/exec"   /* Apps Script web-app URL, eindigt op /exec */
+};
+function syncAan(){return !!SYNC.apiUrl}
+
+function haalRemote(){
+  if(!SYNC.apiUrl){syncState={mode:"local",msg:""};return Promise.resolve()}
+  return fetch(SYNC.apiUrl+"?actie=lijst&t="+Date.now(),{cache:"no-store"})
+    .then(r=>r.json()).then(d=>{
+      if(!d||!d.regels)throw new Error("onverwacht antwoord");
+      REMOTE=d.regels.filter(r=>r&&r.datum).map(r=>({
+        id:String(r.id||""),datum:String(r.datum||"").slice(0,10),zone:String(r.zone||""),
+        wat:String(r.wat||""),hoeveel:String(r.hoeveel||""),wie:String(r.wie||""),
+        notitie:String(r.notitie||""),taak:String(r.taak||""),synced:1}));
+      const ids=new Set(REMOTE.map(r=>r.id));
+      let ch=false;LOG.forEach(r=>{if(!r.synced&&ids.has(r.id)){r.synced=1;ch=true}});
+      if(ch)saveLog();
+      /* opgeruimd: eigen regels die bevestigd op de sheet staan hoeven niet dubbel lokaal */
+      syncState={mode:"online",msg:""};
+    }).catch(e=>{syncState={mode:"offline",msg:String(e.message||e)}});
+}
+function stuurPending(){
+  if(!SYNC.apiUrl)return Promise.resolve();
+  const pend=LOG.filter(r=>!r.synced);
+  if(!pend.length)return Promise.resolve();
+  return Promise.all(pend.map(r=>{
+    const fd=new URLSearchParams();
+    fd.append("actie","toevoegen");
+    ["id","datum","zone","wat","hoeveel","wie","notitie","taak"].forEach(k=>fd.append(k,r[k]||""));
+    return fetch(SYNC.apiUrl,{method:"POST",mode:"no-cors",body:fd})
+      .then(()=>{r.verzonden=1}).catch(()=>{});
+  })).then(()=>saveLog());
+}
+function syncNu(){
+  if(!syncAan()){renderLogboek();return}
+  syncState={mode:"bezig",msg:""};renderLogboek();
+  stuurPending().then(haalRemote).then(()=>{renderLogboek();renderNu()});
+}
+
+/* ---------- toevoegen ---------- */
+function logToevoegen(rec){
+  rec.id=rec.id||uid();
+  LOG.push(rec);saveLog();
+  if(syncAan())stuurPending().then(()=>{});
+}
+function logVerwijderen(id){
+  const r=LOG.find(x=>x.id==id);
+  if(!r)return;
+  if(!confirm(L({nl:"Deze regel verwijderen? Als hij al gedeeld is, blijft hij bij de anderen staan tot je hem ook in de Sheet weghaalt.",es:"¿Borrar esta línea? Si ya se compartió, seguirá visible para los demás hasta que la borres también en la hoja."})))return;
+  LOG=LOG.filter(x=>x.id!=id);saveLog();renderLogboek();renderNu();
+}
+
+/* ---------- taken afvinken ---------- */
+function taakKey(t){return t.id||("t_"+L(t.ttl).toLowerCase().replace(/[^a-z0-9]+/g,"_").slice(0,28))}
+function taakGedaan(t,maand,jaar){
+  const k=taakKey(t), pre=(jaar||new Date().getFullYear())+"-"+String((maand==null?curM:maand)+1).padStart(2,"0");
+  return alleRegels().find(r=>r.taak==k&&(r.datum||"").startsWith(pre));
+}
+function taakAfvinken(key,maand){
+  const jaar=new Date().getFullYear();
+  const t=(CAL[maand]&&CAL[maand].tasks||[]).find(x=>taakKey(x)==key);
+  const titel=t?L(t.ttl):key;
+  const best=alleRegels().find(r=>r.taak==key&&(r.datum||"").startsWith(jaar+"-"+String(maand+1).padStart(2,"0")));
+  if(best){
+    if(!LOG.find(x=>x.id==best.id)){alert(L({nl:"Deze is door iemand anders afgevinkt — haal hem weg in het logboek of in de Sheet.",es:"Otra persona lo marcó — quítalo en el registro o en la hoja."}));return}
+    LOG=LOG.filter(x=>x.id!=best.id);saveLog();
+  }else{
+    logToevoegen({id:uid(),datum:today(),zone:"",wat:titel,hoeveel:"",wie:getWie(),notitie:"",taak:key});
+  }
+  renderNu();renderMaand();renderLogboek();
+}
 
 /* ============ STATE + RENDER ============ */
 let lang="nl";
@@ -359,14 +581,18 @@ function buildNav(){
 function showTab(k){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
   document.getElementById("v-"+k).classList.add("active");window.scrollTo(0,0)}
 
-function taskCard(t,highlightWeek){
+function taskCard(t,maand){
   const c=t.cat;
-  let cls="card "+c, hl="";
-  if(highlightWeek&&t.when){ /* highlight if matches current week */ }
   let h=`<div class="card ${c}"><div class="ttl"><span class="tag ${c}">${L(T.legend)[cats.indexOf(c)]}</span>${L(t.ttl)}</div>`;
   if(t.body)h+=`<div class="body">${L(t.body)}</div>`;
   if(t.when)h+=`<div class="when">⏱ ${L(t.when)}</div>`;
   if(t.meta)h+=`<div class="meta"><span>${L(t.meta)}</span></div>`;
+  if(t.vink&&maand!=null){
+    const k=taakKey(t), g=taakGedaan(t,maand,new Date().getFullYear());
+    h+=`<div class="taskdone">
+      <button class="${g?"done":""}" onclick="taakAfvinken('${k}',${maand})">${g?"✓ "+L(LT.gedaan):L(LT.afvinken)}</button>
+      <span class="dinfo">${g?L(LT.op)+" "+g.datum+(g.wie?" · "+g.wie:""):""}</span></div>`;
+  }
   h+=`</div>`;return h}
 
 function legendHTML(){let h='<div class="legend">';
@@ -384,8 +610,9 @@ function renderNu(){
   if(!tasks.length||tasks.every(t=>t.cat=="rust")){
     h+=tasks.map(t=>taskCard(t)).join("");
   }else{
+    h+=achterstandHTML();
     h+=`<h2 class="section">${MONTHS[lang][curM]}</h2>`;
-    h+=tasks.map(t=>taskCard(t,true)).join("");
+    h+=tasks.map(t=>taskCard(t,curM)).join("");
   }
   document.getElementById("v-nu").innerHTML=h}
 
@@ -396,7 +623,7 @@ function renderMaand(){
   h+=`</div>`+legendHTML();
   const tasks=CAL[selM].tasks;
   h+=`<h2 class="section">${MONTHS[lang][selM]} · ${L(SEASONS[CAL[selM].season])}</h2>`;
-  h+=tasks.length?tasks.map(t=>taskCard(t)).join(""):`<div class="empty">${L(T.nothing)}</div>`;
+  h+=tasks.length?tasks.map(t=>taskCard(t,selM==curM?curM:null)).join(""):`<div class="empty">${L(T.nothing)}</div>`;
   document.getElementById("v-maand").innerHTML=h}
 
 function renderSeizoen(){
@@ -437,59 +664,246 @@ function renderProducten(){
       <div class="row"><b>${L({nl:"Periode",es:"Periodo"})}</b>${L(p.per)}</div>
       ${p.dose?`<div class="row"><b>${L({nl:"Dosering per rugzak (16 L)",es:"Dosis por mochila (16 L)"})}</b>${L(p.dose)}</div>`:""}
       <div class="row"><b>${L({nl:"Gebruik",es:"Uso"})}</b>${L(p.d)}</div>
+      ${p.bewaar?`<div class="row"><b>${L({nl:"Houdbaarheid",es:"Conservación"})}</b>${L(p.bewaar)}</div>`:""}
     </div></details>`});
   document.getElementById("v-producten").innerHTML=h}
 
 function renderDoseringen(){
   let h=`<h2 class="section">${L({nl:"Doseringen & zones",es:"Dosis y zonas"})}</h2>`;
-  h+=`<p class="note">${L({nl:"1 rugzak (mochila) = 16 L water. Hieronder: zones, dosering per product, mengbaarheid en wat je per plek geeft.",es:"1 mochila = 16 L de agua. Abajo: zonas, dosis por producto, mezclabilidad y qué aplicar por sitio."})}</p>`;
+  h+=`<p class="note">${L({nl:"1 rugzak (mochila) = 16 L water. Het aantal rugzakken bepaalt hoeveel water je over het veld brengt — niet hoeveel product. Bij bodemproducten telt de hoeveelheid per m²; meer rugzakken betekent dus verdunnen, niet meer middel.",es:"1 mochila = 16 L de agua. El número de mochilas determina cuánta agua llevas al terreno — no cuánto producto. En los productos de suelo cuenta la cantidad por m²; más mochilas significa diluir, no añadir más."})}</p>`;
+
   h+=`<h2 class="section">${L({nl:"Zones",es:"Zonas"})}</h2>`;
-  h+=`<table><tr><th>${L({nl:"Zone",es:"Zona"})}</th><th>${L({nl:"Oppervlak",es:"Superficie"})}</th><th>${L({nl:"Rugzakken gras",es:"Mochilas césped"})}</th></tr>`;
-  const zones=[
-    {z:{nl:"Gras boven (bij huis)",es:"Césped arriba (casa)"},o:{nl:"± 600 m² gras",es:"± 600 m² césped"},r:"2 (2×16 L)"},
-    {z:{nl:"Gras bij zwembad",es:"Césped piscina"},o:{nl:"± 350 m² gras + planten",es:"± 350 m² césped + plantas"},r:{nl:"1 (1×16 L, samen)",es:"1 (1×16 L, juntos)"}}
-  ];
-  zones.forEach(z=>h+=`<tr><td><b>${L(z.z)}</b></td><td>${L(z.o)}</td><td>${typeof z.r==="string"?z.r:L(z.r)}</td></tr>`);
+  h+=`<table><tr><th>${L({nl:"Zone",es:"Zona"})}</th><th>${L({nl:"Oppervlak",es:"Superficie"})}</th><th>${L({nl:"Rugzakken",es:"Mochilas"})}</th><th>${L({nl:"Water",es:"Agua"})}</th></tr>`;
+  ZONES.filter(z=>z.m2).forEach(z=>{
+    h+=`<tr><td><b>${L(z)}</b></td><td>${z.m2} m²</td><td>${z.rz} × 16 L</td><td>${z.rz*16} L</td></tr>`});
   h+=`</table>`;
-  h+=`<h2 class="section">Cystium K — ${L({nl:"ml per rugzak (16 L) · anti-stress",es:"ml por mochila (16 L) · anti-estrés"})}</h2>`;
-  h+=`<table><tr><th>${L({nl:"Toepassing",es:"Aplicación"})}</th><th>${L({nl:"Normaal",es:"Normal"})}</th><th>${L({nl:"Extra boost",es:"Refuerzo"})}</th></tr>`;
-  const dos=[
-    {t:{nl:"Gras boven — 600 m², 2 rugzakken",es:"Césped arriba — 600 m², 2 mochilas"},n:{nl:"60 ml p/rugzak (120 ml totaal)",es:"60 ml p/mochila (120 ml total)"},s:{nl:"90 ml p/rugzak (180 ml totaal)",es:"90 ml p/mochila (180 ml total)"}},
-    {t:{nl:"Gras zwembad — 350 m², 1 rugzak",es:"Césped piscina — 350 m², 1 mochila"},n:"120 ml",s:"180 ml"},
-    {t:{nl:"Planten",es:"Plantas"},n:"25–30 ml",s:"40 ml"}
-  ];
-  dos.forEach(d=>h+=`<tr><td>${L(d.t)}</td><td>${typeof d.n==="string"?d.n:L(d.n)}</td><td>${typeof d.s==="string"?d.s:L(d.s)}</td></tr>`);
+  h+=`<p class="note">${L({nl:"Gemeten augustus 2026. Eerdere versies gingen uit van 600 en 350 m² — die waren te ruim ingeschat, waardoor de zwembadzone jarenlang meer per m² kreeg dan het gras bij huis.",es:"Medido en agosto de 2026. Versiones anteriores usaban 600 y 350 m² — una estimación demasiado alta, por lo que la zona de la piscina recibió durante años más por m² que el césped de la casa."})}</p>`;
+
+  h+=`<h2 class="section">${L({nl:"Dosering per product — ml per rugzak van 16 L",es:"Dosis por producto — ml por mochila de 16 L"})}</h2>`;
+  h+=`<table><tr><th>${L({nl:"Product",es:"Producto"})}</th><th>${L({nl:"Gras boven",es:"Césped arriba"})}<br><span class="pill">4 × 16 L</span></th><th>${L({nl:"Gras zwembad",es:"Césped piscina"})}<br><span class="pill">2 × 16 L</span></th><th>${L({nl:"Planten",es:"Plantas"})}<br><span class="pill">1 × 16 L</span></th></tr>`;
+  DOSISTABEL.forEach(d=>{
+    h+=`<tr><td><b>${d.n}</b><div class="small-note">${L(d.note)}</div></td><td>${d.boven?d.boven+' ml<div class="small-note">'+(d.boven*4)+' ml '+L({nl:"totaal",es:"total"})+'</div>':'—'}</td><td>${d.beneden?d.beneden+' ml<div class="small-note">'+(d.beneden*2)+' ml '+L({nl:"totaal",es:"total"})+'</div>':'—'}</td><td>${d.plant?d.plant+' ml':'—'}</td></tr>`});
   h+=`</table>`;
-  h+=`<p class="note">${L({nl:"Goed schudden vóór gebruik. Ruim water vóór en ná. Alleen bij extreme hitte, droogte, na snoei of stress.",es:"Agitar bien antes. Riego abundante antes y después. Solo con calor extremo, sequía, tras poda o estrés."})}</p>`;
-  h+=`<p class="note">${L({nl:"Logboek: juni 2026 — 100 ml/rugzak toegepast (richtlijn nu: 60 ml/rugzak normaal, 90 ml extra boost).",es:"Registro: junio 2026 — 100 ml/mochila aplicado (pauta actual: 60 ml/mochila normal, 90 ml refuerzo)."})}</p>`;
-  h+=`<h2 class="section">${L({nl:"Dosering per product — per rugzak (16 L)",es:"Dosis por producto — por mochila (16 L)"})}</h2>`;
-  h+=`<table><tr><th>${L({nl:"Product",es:"Producto"})}</th><th>${L({nl:"Per rugzak",es:"Por mochila"})}</th><th>${L({nl:"Frequentie",es:"Frecuencia"})}</th></tr>`;
-  const prod=[
-    {p:"Ficosturf",d:"80 ml",f:{nl:"1×/1–2 mnd",es:"1×/1–2 meses"}},
-    {p:"Ficosagro",d:{nl:"400 ml (gietbeurt)",es:"400 ml (riego)"},f:{nl:"1×/maand",es:"1×/mes"}},
-    {p:"Cystium N",d:"40 ml",f:{nl:"1×/maand",es:"1×/mes"}},
-    {p:"Cystium K",d:{nl:"60–120 ml",es:"60–120 ml"},f:{nl:"alleen bij stress",es:"solo con estrés"}},
-    {p:"Purín de Ortiga",d:"320 ml",f:{nl:"om 10–15 dgn, z.n.",es:"cada 10–15 días, s.n."}}
-  ];
-  prod.forEach(x=>h+=`<tr><td><b>${x.p}</b></td><td>${typeof x.d==="string"?x.d:L(x.d)}</td><td>${L(x.f)}</td></tr>`);
+  h+=`<p class="note">${L({nl:"Deze getallen zijn vastgesteld in augustus 2026 op basis van de gemeten oppervlaktes en de etiketten. Ze liggen bij de bodemproducten lager per rugzak dan voorheen, terwijl het gras precies evenveel krijgt — het verschil zit in het water.",es:"Cifras fijadas en agosto de 2026 según las superficies medidas y las etiquetas. En los productos de suelo la dosis por mochila es menor que antes, pero el césped recibe exactamente lo mismo — la diferencia está en el agua."})}</p>`;
+
+  h+=`<h2 class="section">Cystium K</h2>`;
+  h+=`<table><tr><th>${L({nl:"Zone",es:"Zona"})}</th><th>${L({nl:"Normaal",es:"Normal"})}</th><th>${L({nl:"Zware stress",es:"Estrés fuerte"})}</th></tr>`;
+  h+=`<tr><td><b>${L({nl:"Gras boven",es:"Césped arriba"})}</b> · 720 m²</td><td>45 ml ${L({nl:"p/rugzak",es:"p/mochila"})}<div class="small-note">180 ml ${L({nl:"totaal",es:"total"})}</div></td><td>55 ml ${L({nl:"p/rugzak",es:"p/mochila"})}<div class="small-note">216 ml ${L({nl:"totaal",es:"total"})}</div></td></tr>`;
+  h+=`<tr><td><b>${L({nl:"Gras zwembad",es:"Césped piscina"})}</b> · 275 m²</td><td>35 ml ${L({nl:"p/rugzak",es:"p/mochila"})}<div class="small-note">69 ml ${L({nl:"totaal",es:"total"})}</div></td><td>40 ml ${L({nl:"p/rugzak",es:"p/mochila"})}<div class="small-note">83 ml ${L({nl:"totaal",es:"total"})}</div></td></tr>`;
+  h+=`<tr><td><b>${L({nl:"Planten",es:"Plantas"})}</b></td><td>30 ml</td><td>40 ml</td></tr>`;
   h+=`</table>`;
-  h+=`<p class="note">${L({nl:"Praktijkdoseringen voor Abrazzo. Officiële Ficosterra-doses staan per hectare (fertigatie); bij twijfel ensayos@ficosterra.com.",es:"Dosis prácticas para Abrazzo. Las oficiales de Ficosterra son por hectárea (fertirrigación); en caso de duda, ensayos@ficosterra.com."})}</p>`;
+  h+=`<div class="card alert"><div class="ttl">${L({nl:"Niet hoger dan dit",es:"No más alto que esto"})}</div><div class="body">${L({nl:"Het etiket schrijft 2–3 liter per hectare per toepassing voor. De kolom 'zware stress' zit al op die bovengrens. De oude richtlijn van 150 ml per rugzak kwam neer op 4,2 L/ha en zat daar dus ruim boven; het etiket kent geen superstress-dosis.",es:"La etiqueta indica 2–3 litros por hectárea y aplicación. La columna 'estrés fuerte' ya está en ese máximo. La pauta antigua de 150 ml por mochila equivalía a 4,2 L/ha, muy por encima; la etiqueta no contempla dosis de súper estrés."})}</div></div>`;
+
+  h+=`<h2 class="section">${L({nl:"Waarom de getallen veranderd zijn",es:"Por qué han cambiado las cifras"})}</h2>`;
+  h+=`<div class="card grass"><div class="ttl">${L({nl:"Bodem of blad",es:"Suelo u hoja"})}</div><div class="body">${L({nl:"Ficosturf, Ficosagro en Cystium N en K werken vanuit de bodem: wat telt is hoeveel er per m² terechtkomt, en het water spoelt het in. Ga je van 2 naar 4 rugzakken bij gelijke ml per rugzak, dan verdubbel je de dosis — vandaar de lagere getallen per rugzak. Purín de Ortiga werkt op het blad en dus op concentratie: daar blijft 240 ml per rugzak staan, ongeacht hoeveel rugzakken je vult. HydraGuard werkt ook op concentratie (0,5%) en wil juist véél water.",es:"Ficosturf, Ficosagro y Cystium N y K actúan desde el suelo: cuenta cuánto llega por m², y el agua lo arrastra. Si pasas de 2 a 4 mochilas manteniendo los ml por mochila, doblas la dosis — de ahí las cifras más bajas. El Purín de Ortiga actúa sobre la hoja y por tanto por concentración: se mantiene en 240 ml por mochila, sean las que sean. HydraGuard también va por concentración (0,5%) y justamente quiere mucha agua."})}</div></div>`;
+
   h+=`<h2 class="section">${L({nl:"Mengbaarheid",es:"Mezclabilidad"})}</h2>`;
   h+=`<div class="card grass"><div class="ttl">${L({nl:"Praktijk (Tuli)",es:"Práctica (Tuli)"})}</div><div class="body">${L({nl:"Tuli bevestigt (juni 2026): de vloeibare Fico-producten mógen samen gemengd worden — Ficosturf, Ficosagro en Cystium N kunnen in 1 rugzak. Purín kan mee met Ficosturf/Cystium N. Azufre: nooit met Purín.",es:"Tuli confirma (junio 2026): los productos Fico líquidos se pueden mezclar — Ficosturf, Ficosagro y Cystium N en una mochila. Purín puede ir con Ficosturf/Cystium N. Azufre: nunca con Purín."})}</div></div>`;
   h+=`<div class="card alert"><div class="ttl">${L({nl:"Let op op het etiket",es:"Atención en la etiqueta"})}</div><div class="body">${L({nl:"Officieel schrijft Ficosterra chloorvrij water voor en na een fungicide 7 dagen wachten. Tuli's praktijk gaat vóór op deze schema's; twijfel je over een nieuwe combinatie, check even bij haar.",es:"Oficialmente Ficosterra pide agua sin cloro y esperar 7 días tras un fungicida. La práctica de Tuli prevalece en este esquema; ante una combinación nueva, consúltala."})}</div></div>`;
-  h+=`<h2 class="section">${L({nl:"Per toepassing (Abrazzo)",es:"Por aplicación (Abrazzo)"})}</h2>`;
+
+  h+=`<h2 class="section">${L({nl:"Houdbaarheid",es:"Conservación"})}</h2>`;
+  h+=`<table><tr><th>${L({nl:"Product",es:"Producto"})}</th><th>${L({nl:"Ongeopend",es:"Cerrado"})}</th><th>${L({nl:"Na openen",es:"Tras abrir"})}</th></tr>`;
+  h+=`<tr><td><b>Cystium-K</b></td><td>${L({nl:"2 jaar",es:"2 años"})}</td><td><b>${L({nl:"9 maanden",es:"9 meses"})}</b></td></tr>`;
+  h+=`<tr><td><b>Ficosagro</b></td><td>—</td><td><b>${L({nl:"3 maanden",es:"3 meses"})}</b></td></tr>`;
+  h+=`</table>`;
+  h+=`<p class="note">${L({nl:"Schrijf de openingsdatum op de fles zodra je hem aanbreekt. Deze middelen werken via levende microben of fytohormonen — een oude fles doet niets meer, en dan zoek je de oorzaak in de dosering terwijl het aan het product ligt.",es:"Apunta la fecha de apertura en el envase al abrirlo. Estos productos actúan por microbios vivos o fitohormonas — un envase viejo ya no hace nada, y entonces buscas la causa en la dosis cuando está en el producto."})}</p>`;
+
+  h+=`<h2 class="section">${L({nl:"Per toepassing",es:"Por aplicación"})}</h2>`;
   h+=`<table><tr><th>${L({nl:"Waar",es:"Dónde"})}</th><th>${L({nl:"Product · per rugzak",es:"Producto · por mochila"})}</th></tr>`;
   const toep=[
-    {w:{nl:"Gras (600 m²)",es:"Césped (600 m²)"},x:{nl:"Cystium N 40 ml + Ficosturf 80 ml + Ficosagro 400 ml (+ evt. Purín 320 ml)",es:"Cystium N 40 ml + Ficosturf 80 ml + Ficosagro 400 ml (+ opc. Purín 320 ml)"}},
-    {w:{nl:"Bomen, citrus, olijf, moestuin",es:"Árboles, cítricos, olivo, huerto"},x:{nl:"Cystium N 40 ml + Purín 320 ml",es:"Cystium N 40 ml + Purín 320 ml"}},
-    {w:{nl:"Bodemverbetering",es:"Mejora del suelo"},x:{nl:"Ficosagro 400 ml als gietbeurt",es:"Ficosagro 400 ml en riego"}}
+    {w:{nl:"Gras boven — 720 m², 4 rugzakken",es:"Césped arriba — 720 m², 4 mochilas"},x:{nl:"Cystium N 20 ml + Ficosturf 40 ml + Ficosagro 200 ml (+ evt. Purín 240 ml)",es:"Cystium N 20 ml + Ficosturf 40 ml + Ficosagro 200 ml (+ opc. Purín 240 ml)"}},
+    {w:{nl:"Gras zwembad — 275 m², 2 rugzakken",es:"Césped piscina — 275 m², 2 mochilas"},x:{nl:"Cystium N 20 ml + Ficosturf 40 ml + Ficosagro 200 ml (+ evt. Purín 240 ml)",es:"Cystium N 20 ml + Ficosturf 40 ml + Ficosagro 200 ml (+ opc. Purín 240 ml)"}},
+    {w:{nl:"Bomen, citrus, olijf, moestuin",es:"Árboles, cítricos, olivo, huerto"},x:{nl:"Cystium N 40 ml + Purín 240 ml",es:"Cystium N 40 ml + Purín 240 ml"}},
+    {w:{nl:"Bodemverbetering",es:"Mejora del suelo"},x:{nl:"Ficosagro 200 ml als gietbeurt",es:"Ficosagro 200 ml en riego"}},
+    {w:{nl:"Droge bodem (HydraGuard)",es:"Suelo seco (HydraGuard)"},x:{nl:"80 ml per rugzak · water vóór én ná",es:"80 ml por mochila · riego antes y después"}}
   ];
   toep.forEach(t=>h+=`<tr><td><b>${L(t.w)}</b></td><td>${L(t.x)}</td></tr>`);
   h+=`</table>`;
   document.getElementById("v-doseringen").innerHTML=h}
-function renderAll(){buildNav();renderNu();renderMaand();renderSeizoen();renderSnoei();renderProblemen();renderProducten();renderDoseringen();
+
+/* ============ LOGBOEK: WEERGAVE ============ */
+const LT={
+  titel:{nl:"Logboek",es:"Registro"},
+  nieuw:{nl:"Noteren",es:"Anotar"},
+  datum:{nl:"Datum",es:"Fecha"},
+  zone:{nl:"Waar",es:"Dónde"},
+  wat:{nl:"Wat",es:"Qué"},
+  hoeveel:{nl:"Hoeveelheid",es:"Cantidad"},
+  wie:{nl:"Wie",es:"Quién"},
+  notitie:{nl:"Notitie",es:"Nota"},
+  opslaan:{nl:"Opslaan",es:"Guardar"},
+  kies:{nl:"— kies —",es:"— elige —"},
+  geschiedenis:{nl:"Wat er gedaan is",es:"Lo que se ha hecho"},
+  leeg:{nl:"Nog niets genoteerd. Vul hierboven het formulier in — het eerste wat je noteert verschijnt hier.",es:"Aún no hay nada. Rellena el formulario de arriba — lo primero que anotes aparecerá aquí."},
+  alles:{nl:"Alle zones",es:"Todas las zonas"},
+  filter:{nl:"Filter",es:"Filtro"},
+  verwijder:{nl:"verwijderen",es:"borrar"},
+  lokaal:{nl:"Alleen op dit apparaat — delen staat nog niet aan",es:"Solo en este dispositivo — compartir aún no está activo"},
+  online:{nl:"Gedeeld met Jenny en Tuli",es:"Compartido con Jenny y Tuli"},
+  offline:{nl:"Geen verbinding — opgeslagen op dit apparaat, gaat vanzelf mee zodra je weer online bent",es:"Sin conexión — guardado en el dispositivo, se enviará al recuperar la red"},
+  bezig:{nl:"Bezig met bijwerken…",es:"Actualizando…"},
+  ververs:{nl:"Bijwerken",es:"Actualizar"},
+  nietverzonden:{nl:"wacht op verzending",es:"pendiente de enviar"},
+  status:{nl:"Stand van zaken",es:"Estado"},
+  nooit:{nl:"nog niet genoteerd",es:"aún sin anotar"},
+  dgn:{nl:"dagen geleden",es:"días"},
+  vandaag:{nl:"vandaag",es:"hoy"},
+  gisteren:{nl:"gisteren",es:"ayer"},
+  gedaan:{nl:"Gedaan",es:"Hecho"},
+  afvinken:{nl:"Afvinken",es:"Marcar"},
+  op:{nl:"op",es:"el"}
+};
+let logFilter="";
+
+function dagenGeleden(datum){
+  if(!datum)return null;
+  const d=new Date(datum+"T12:00:00"), n=new Date();
+  return Math.floor((n-d)/86400000);
+}
+function dagTekst(n){
+  if(n==null)return L(LT.nooit);
+  if(n<=0)return L(LT.vandaag);
+  if(n==1)return L(LT.gisteren);
+  return n+" "+L(LT.dgn);
+}
+
+function renderLogboek(){
+  const wie=getWie();
+  let h=`<h2 class="section">${L(LT.nieuw)}</h2>`;
+
+  /* status */
+  let cls="off",txt=L(LT.lokaal);
+  if(syncState.mode=="online"){cls="on";txt=L(LT.online)}
+  else if(syncState.mode=="offline"){cls="err";txt=L(LT.offline)}
+  else if(syncState.mode=="bezig"){cls="off";txt=L(LT.bezig)}
+  h+=`<div class="status"><span class="dot ${cls}"></span><span>${txt}</span>`;
+  if(syncAan())h+=`<button class="btn sec" style="width:auto;padding:4px 10px;font-size:.75rem;margin-left:auto" onclick="syncNu()">${L(LT.ververs)}</button>`;
+  h+=`</div>`;
+
+  /* formulier */
+  h+=`<div class="card">`;
+  h+=`<div class="row2">
+    <div class="field"><label>${L(LT.datum)}</label><input type="date" id="f-datum" value="${today()}"></div>
+    <div class="field"><label>${L(LT.wie)}</label><select id="f-wie">
+      <option value="">${L(LT.kies)}</option>
+      ${["KJ","Jenny","Tuli"].map(w=>`<option value="${w}"${w==wie?" selected":""}>${w}</option>`).join("")}
+    </select></div></div>`;
+  h+=`<div class="field"><label>${L(LT.zone)}</label><select id="f-zone" onchange="updateCalc()">
+    ${ZONES.map(z=>`<option value="${z.id}">${L(z)}${z.m2?" · "+z.m2+" m²":""}</option>`).join("")}
+  </select></div>`;
+  h+=`<div class="field"><label>${L(LT.wat)}</label><select id="f-wat" onchange="updateCalc()">
+    <option value="">${L(LT.kies)}</option>
+    ${LOGWAT.map(g=>`<optgroup label="${L(g.g)}">${g.items.map(i=>`<option value="${i.v}">${L(i)}</option>`).join("")}</optgroup>`).join("")}
+  </select></div>`;
+  h+=`<div id="f-calc"></div>`;
+  h+=`<div class="field"><label>${L(LT.hoeveel)}</label><input type="text" id="f-hoeveel" placeholder="${L({nl:"wordt ingevuld zodra je zone en product kiest",es:"se rellena al elegir zona y producto"})}"></div>`;
+  h+=`<div class="field"><label>${L(LT.notitie)}</label><textarea id="f-notitie" placeholder="${L({nl:"Wat viel op? Bijvoorbeeld: gele plek bij de hoek, bodem erg droog, wind uit zee.",es:"¿Qué observaste? Por ejemplo: mancha amarilla en la esquina, suelo muy seco, viento del mar."})}"></textarea></div>`;
+  h+=`<button class="btn" onclick="opslaanLog()">${L(LT.opslaan)}</button>`;
+  h+=`<div id="f-status-ok" style="display:none;margin-top:9px;font-size:.84rem;color:#40632a;background:#e7f0e0;border-radius:8px;padding:8px 11px">${L({nl:"Genoteerd.",es:"Anotado."})}</div>`;
+  h+=`</div>`;
+
+  /* geschiedenis */
+  const regels=alleRegels().filter(r=>!logFilter||r.zone==logFilter);
+  h+=`<h2 class="section">${L(LT.geschiedenis)}</h2>`;
+  h+=`<div class="field"><label>${L(LT.filter)}</label><select onchange="logFilter=this.value;renderLogboek()">
+    <option value="">${L(LT.alles)}</option>
+    ${ZONES.map(z=>`<option value="${z.id}"${z.id==logFilter?" selected":""}>${L(z)}</option>`).join("")}
+  </select></div>`;
+  if(!regels.length){h+=`<div class="empty">${L(LT.leeg)}</div>`}
+  else{
+    regels.slice(0,200).forEach(r=>{
+      const eigen=LOG.some(x=>x.id==r.id), pend=eigen&&!r.synced&&syncAan();
+      const it=watById(r.wat), obs=it&&it.obs;
+      const z=r.zone?zoneById(r.zone):null;
+      h+=`<div class="logitem ${obs?"obs":""} ${pend?"pending":""}">
+        <div class="lh"><div class="lw">${it?L(it):(r.wat||L(LT.notitie))}</div><div class="ld">${r.datum}</div></div>
+        ${z?`<div class="lz">${L(z)}</div>`:""}
+        ${r.hoeveel?`<div class="lq">${r.hoeveel}</div>`:""}
+        ${r.notitie?`<div class="ln">${r.notitie.replace(/</g,"&lt;")}</div>`:""}
+        <div class="lby">${r.wie?r.wie:"—"}${pend?" · "+L(LT.nietverzonden):""}${eigen?` · <a href="#" onclick="event.preventDefault();logVerwijderen('${r.id}')">${L(LT.verwijder)}</a>`:""}</div>
+      </div>`;
+    });
+  }
+  document.getElementById("v-logboek").innerHTML=h;
+  updateCalc();
+}
+
+function updateCalc(){
+  const ws=document.getElementById("f-wat"), zs=document.getElementById("f-zone"), box=document.getElementById("f-calc");
+  if(!ws||!zs||!box)return;
+  const c=berekenDosis(ws.value,zs.value);
+  if(!c){box.innerHTML="";return}
+  const geldig=c.regels.filter(r=>r.ml!=null);
+  if(!geldig.length){
+    box.innerHTML=`<div class="calc">${L({nl:"Voor deze zone staat geen dosering vast — vul zelf in wat je gebruikt hebt.",es:"No hay dosis fijada para esta zona — indica tú mismo lo que has usado."})}</div>`;
+    return;
+  }
+  let h=`<div class="calc"><b>${c.rz} ${L({nl:"rugzakken",es:"mochilas"})} · ${c.liter} L</b><br>`;
+  h+=geldig.map(r=>`${r.n}: <b>${r.ml} ml</b> ${L({nl:"per rugzak",es:"por mochila"})} → <b>${r.tot} ml</b> ${L({nl:"totaal",es:"total"})}`).join("<br>");
+  if(ws.value=="HydraGuard")h+=`<div class="hint">${L({nl:"Water geven vóór én ná het sproeien — anders bereikt het de wortelzone niet.",es:"Regar antes y después de pulverizar — si no, no llega a la zona radicular."})}</div>`;
+  if(ws.value=="Cystium K")h+=`<div class="hint">${L({nl:"Bij zware stress: boven 55 ml, zwembad 40 ml per rugzak. Niet hoger — dat is de fiche-max.",es:"Con estrés fuerte: arriba 55 ml, piscina 40 ml por mochila. No más — es el máximo de la ficha."})}</div>`;
+  if(ws.value=="Ficosagro")h+=`<div class="hint">${L({nl:"Ná de bemesting toepassen versterkt het effect.",es:"Aplicar tras el abonado refuerza el efecto."})}</div>`;
+  h+=`</div>`;
+  box.innerHTML=h;
+  const hv=document.getElementById("f-hoeveel");
+  if(hv&&!hv.dataset.touched)hv.value=geldig.map(r=>r.n+" "+r.tot+" ml").join(" + ");
+}
+
+function opslaanLog(){
+  const g=id=>document.getElementById(id);
+  const wat=g("f-wat").value;
+  if(!wat){alert(L({nl:"Kies eerst wat je gedaan hebt.",es:"Elige primero qué has hecho."}));return}
+  const wie=g("f-wie").value;
+  if(wie)setWie(wie);
+  logToevoegen({id:uid(),datum:g("f-datum").value||today(),zone:g("f-zone").value,wat:wat,
+    hoeveel:g("f-hoeveel").value.trim(),wie:wie,notitie:g("f-notitie").value.trim(),taak:""});
+  const zb=g("f-zone").value;
+  renderLogboek();renderNu();
+  const z2=document.getElementById("f-zone"); if(z2)z2.value=zb;
+  updateCalc();
+  const s=document.getElementById("f-status-ok");
+  if(s){s.style.display="block";setTimeout(()=>{const x=document.getElementById("f-status-ok");if(x)x.style.display="none"},2600)}
+  window.scrollTo(0,0);
+}
+
+/* ============ ACHTERSTAND IN NU ============ */
+const VASTE=[
+  {key:"gras_combo",  nl:"Gras: Cystium N + Ficosturf + Ficosagro", es:"Césped: Cystium N + Ficosturf + Ficosagro", dagen:30, watm:["Combi gras","Ficosturf","Ficosagro","Cystium N"]},
+  {key:"plant_combo", nl:"Planten: Cystium N + Ficosagro",          es:"Plantas: Cystium N + Ficosagro",           dagen:30, watm:["Combi planten"]},
+  {key:"purin",       nl:"Purín de Ortiga",                          es:"Purín de Ortiga",                          dagen:30, watm:["Purín de Ortiga"]}
+];
+function laatsteVan(v){
+  const rs=alleRegels().filter(r=>r.taak==v.key||v.watm.indexOf(r.wat)>=0);
+  if(!rs.length)return null;
+  return rs.map(r=>r.datum).sort().reverse()[0];
+}
+function achterstandHTML(){
+  if(curM<2||curM>9)return "";
+  let h=`<h2 class="section">${L(LT.status)}</h2>`;
+  VASTE.forEach(v=>{
+    const d=laatsteVan(v), n=dagenGeleden(d);
+    let cl="never",bar="#9aa0a6";
+    if(n!=null){
+      if(n<v.dagen-5){cl="ok";bar="var(--leaf)"}
+      else if(n<=v.dagen+10){cl="soon";bar="var(--gold)"}
+      else {cl="late";bar="var(--terra)"}
+    }
+    h+=`<div class="due"><div class="bar" style="background:${bar}"></div>
+      <div class="dt"><div class="dn">${L(v)}</div>
+      <div class="dd">${d?L(LT.op)+" "+d:L({nl:"nog geen enkele keer genoteerd",es:"nunca anotado"})}</div></div>
+      <div class="dv ${cl}">${dagTekst(n)}</div></div>`;
+  });
+  h+=`<p class="note">${L({nl:"Gebaseerd op het logboek. Vink een taak hieronder af of noteer hem, dan telt de teller opnieuw.",es:"Según el registro. Marca una tarea abajo o anótala, y el contador vuelve a empezar."})}</p>`;
+  return h;
+}
+
+function renderAll(){buildNav();renderNu();renderMaand();renderSeizoen();renderSnoei();renderProblemen();renderProducten();renderDoseringen();renderLogboek();
   document.querySelectorAll("[data-i]").forEach(e=>{const k=e.getAttribute("data-i");if(T[k])e.textContent=L(T[k])})}
+
+loadLog();
 renderAll();showTab(curTab);
+if(syncAan()){syncNu();window.addEventListener("online",syncNu)}
+document.addEventListener("input",e=>{if(e.target&&e.target.id=="f-hoeveel")e.target.dataset.touched="1"});
 </script>
 </body>
 </html>
