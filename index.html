@@ -393,8 +393,9 @@ const PRODUCTEN=[
 
 /* ============ ZONES, DOSERINGEN, LOGBOEK ============ */
 const ZONES=[
-  {id:"gras_boven",  nl:"Gras boven (bij huis)", es:"Césped arriba (casa)",      m2:720, rz:4, type:"gras"},
-  {id:"gras_zwembad",nl:"Gras bij zwembad",      es:"Césped piscina",            m2:275, rz:2, type:"gras"},
+  {id:"gras_boven",  nl:"Gras boven (bij huis)", es:"Césped arriba (casa)",      m2:720, rz:4, type:"gras", k:{nl:"boven",es:"arriba"}},
+  {id:"gras_zwembad",nl:"Gras bij zwembad",      es:"Césped piscina",            m2:275, rz:2, type:"gras", k:{nl:"zwembad",es:"piscina"}},
+  {id:"gras_beide",  nl:"Beide grasvelden samen",es:"Ambos céspedes juntos",     m2:995, rz:6, type:"gras", combi:["gras_boven","gras_zwembad"]},
   {id:"planten",     nl:"Planten & struiken",    es:"Plantas y arbustos",        rz:1,   type:"plant"},
   {id:"citrus",      nl:"Citrus, olijf & bomen", es:"Cítricos, olivo y árboles", rz:1,   type:"plant"},
   {id:"moestuin",    nl:"Moestuin",              es:"Huerto",                    rz:1,   type:"plant"},
@@ -451,6 +452,19 @@ function berekenDosis(product,zoneId){
   const z=zoneById(zoneId), it=watById(product);
   if(!it||!it.calc)return null;
   const namen=it.combi||[product];
+  if(z.combi){
+    const subs=z.combi.map(zoneById);
+    const regels=namen.map(n=>{
+      const d=DOSISTABEL.find(x=>x.n==n); if(!d)return null;
+      const delen=subs.map(sz=>{
+        const ml=(sz.id=="gras_boven")?d.boven:d.beneden;
+        return ml==null?null:{z:sz,ml:ml,rz:sz.rz,tot:ml*sz.rz};
+      });
+      if(delen.some(x=>x==null))return {n:n,ml:null,tot:null};
+      return {n:n,ml:null,delen:delen,tot:delen.reduce((a,b)=>a+b.tot,0)};
+    }).filter(Boolean);
+    return {zone:z,rz:z.rz,liter:z.rz*16,regels:regels,combi:true};
+  }
   const regels=[];
   namen.forEach(n=>{
     const d=DOSISTABEL.find(x=>x.n==n); if(!d)return;
@@ -464,7 +478,7 @@ function berekenDosis(product,zoneId){
 }
 function dosisTekst(product,zoneId){
   const c=berekenDosis(product,zoneId); if(!c)return "";
-  return c.regels.filter(r=>r.ml!=null).map(r=>r.n+" "+r.tot+" ml").join(" + ")+" ("+c.rz+"×16 L)";
+  return c.regels.filter(r=>r.tot!=null).map(r=>r.n+" "+r.tot+" ml").join(" + ")+" ("+c.rz+"×16 L)";
 }
 
 /* ---------- opslag ---------- */
@@ -833,13 +847,16 @@ function updateCalc(){
   if(!ws||!zs||!box)return;
   const c=berekenDosis(ws.value,zs.value);
   if(!c){box.innerHTML="";return}
-  const geldig=c.regels.filter(r=>r.ml!=null);
+  const geldig=c.regels.filter(r=>r.tot!=null);
   if(!geldig.length){
     box.innerHTML=`<div class="calc">${L({nl:"Voor deze zone staat geen dosering vast — vul zelf in wat je gebruikt hebt.",es:"No hay dosis fijada para esta zona — indica tú mismo lo que has usado."})}</div>`;
     return;
   }
   let h=`<div class="calc"><b>${c.rz} ${L({nl:"rugzakken",es:"mochilas"})} · ${c.liter} L</b><br>`;
-  h+=geldig.map(r=>`${r.n}: <b>${r.ml} ml</b> ${L({nl:"per rugzak",es:"por mochila"})} → <b>${r.tot} ml</b> ${L({nl:"totaal",es:"total"})}`).join("<br>");
+  h+=geldig.map(r=>r.delen
+    ? `${r.n}: `+r.delen.map(d=>`${L(d.z.k||d.z)} <b>${d.ml} ml</b>×${d.rz}=${d.tot} ml`).join(" · ")+` → <b>${r.tot} ml</b> ${L({nl:"totaal",es:"total"})}`
+    : `${r.n}: <b>${r.ml} ml</b> ${L({nl:"per rugzak",es:"por mochila"})} → <b>${r.tot} ml</b> ${L({nl:"totaal",es:"total"})}`).join("<br>");
+  if(c.combi)h+=`<div class="hint">${L({nl:"Vul beide velden in één ronde: 4 rugzakken boven, 2 bij het zwembad.",es:"Ambos céspedes en una ronda: 4 mochilas arriba, 2 en la piscina."})}</div>`;
   if(ws.value=="HydraGuard")h+=`<div class="hint">${L({nl:"Water geven vóór én ná het sproeien — anders bereikt het de wortelzone niet.",es:"Regar antes y después de pulverizar — si no, no llega a la zona radicular."})}</div>`;
   if(ws.value=="Cystium K")h+=`<div class="hint">${L({nl:"Bij zware stress: boven 55 ml, zwembad 40 ml per rugzak. Niet hoger — dat is de fiche-max.",es:"Con estrés fuerte: arriba 55 ml, piscina 40 ml por mochila. No más — es el máximo de la ficha."})}</div>`;
   if(ws.value=="Ficosagro")h+=`<div class="hint">${L({nl:"Ná de bemesting toepassen versterkt het effect.",es:"Aplicar tras el abonado refuerza el efecto."})}</div>`;
@@ -870,7 +887,8 @@ function opslaanLog(){
 const VASTE=[
   {key:"gras_combo",  nl:"Gras: Cystium N + Ficosturf + Ficosagro", es:"Césped: Cystium N + Ficosturf + Ficosagro", dagen:30, watm:["Combi gras","Ficosturf","Ficosagro","Cystium N"]},
   {key:"plant_combo", nl:"Planten: Cystium N + Ficosagro",          es:"Plantas: Cystium N + Ficosagro",           dagen:30, watm:["Combi planten"]},
-  {key:"purin",       nl:"Purín de Ortiga",                          es:"Purín de Ortiga",                          dagen:30, watm:["Purín de Ortiga"]}
+  {key:"purin",       nl:"Purín de Ortiga",                          es:"Purín de Ortiga",                          dagen:30, watm:["Purín de Ortiga"]},
+  {key:"hydraguard",  nl:"HydraGuard (alleen zomer)",                es:"HydraGuard (solo verano)",                 dagen:30, watm:["HydraGuard"], maanden:[5,6,7,8]}
 ];
 function laatsteVan(v){
   const rs=alleRegels().filter(r=>r.taak==v.key||v.watm.indexOf(r.wat)>=0);
@@ -880,7 +898,7 @@ function laatsteVan(v){
 function achterstandHTML(){
   if(curM<2||curM>9)return "";
   let h=`<h2 class="section">${L(LT.status)}</h2>`;
-  VASTE.forEach(v=>{
+  VASTE.filter(v=>!v.maanden||v.maanden.indexOf(curM)>=0).forEach(v=>{
     const d=laatsteVan(v), n=dagenGeleden(d);
     let cl="never",bar="#9aa0a6";
     if(n!=null){
